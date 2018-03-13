@@ -220,18 +220,6 @@ bool limit( bool car1, bool x, bool fwd, bool start){
     }
 }
 
-/*
-bool zlim(int carriage){
-    bool c1 = digitalRead(Z1B) == HIGH || digitalRead(Z1T) == HIGH;
-    bool c2 = digitalRead(Z2B) == HIGH || digitalRead(Z2T) == HIGH;
-    switch(carriage){
-        case 0: return c1 && c2; // both carriages
-        case 1: return c1; // carriage 1
-        case 2: return c2; // carriage 2
-    }
-}
-*/
-
 // Activates water pump for stack
 void squirt(){
     
