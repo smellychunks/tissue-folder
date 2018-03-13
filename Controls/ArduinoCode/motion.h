@@ -1,84 +1,3 @@
-// Move axis motors to target point
-// (still need to add limit switches)
-bool move(uint16_t xt, uint16_t zt, uint8_t carriage) { 
-    
-    // True until motors have moved (for limit switches)
-    bool start = true;
-    bool car1 = carriage == 1;
-    bool xcheck, zcheck;
-    // Print move targets to console
-    Serial.print("Moving to X to ");
-    Serial.print(xt);
-    Serial.print(" and Z to ");
-    Serial.println(zt);
-    
-    // Initialize move targets as long array
-    long targets[2];
-    targets[0] = xt;
-    targets[1] = zt;
-    
-    // Initialize pointers to motor control objects
-    AccelStepper* x;
-    AccelStepper* z;
-    MultiStepper* xz;
-    
-    // Assign pointers based on axis
-    if (car1){
-        x = & x1;
-        z = & z1;
-        xz = & x1z1;
-    } else {
-        x = & x2;
-        z = & z2;
-        xz = & x2z2;
-    }
-        
-    // Turn on motors
-    x->enableOutputs();
-    z->enableOutputs();
-    
-    // Set targets and run
-    xz->moveTo(targets);
-    // Initialize limit switch variables
-    bool xfwd = x->distanceToGo() >= 0;
-    bool zfwd = z->distanceToGo() >= 0;
-    
-    // Check limit switches before move
-    xcheck = limit(car1,true,fwd,start);
-    zcheck = limit(car1,false,fwd,start);
-    if (xcheck || zcheck){
-        return true;
-    }
-    
-    // Move while checking limit switches
-    else {
-        while(xz->run()) {
-            // start is true until carriage undocks
-            if (start) {
-                start = docked(carriage);
-            }
-            // limits checked once carriage undocks
-            else {
-                xcheck = limit(car1,true,fwd,start);
-                zcheck = limit(car1,false,fwd,start);
-                if (xcheck || zcheck){
-                    break;
-                }
-            }
-        }
-    }
-    
-    // Turn off motors
-    x->disableOutputs();
-    z->disableOutputs();
-    
-    return false;
-}
-
-bool home(){
-    return false;
-}
-
 // Checks limit switches to see if carriages
 // are in ready position (end of rails)
 bool docked(int carriage){
@@ -218,6 +137,88 @@ bool limit( bool car1, bool x, bool fwd, bool start){
             }
         }
     }
+}
+
+// Move axis motors to target point
+// (still need to add limit switches)
+bool move(uint16_t xt, uint16_t zt, uint8_t carriage) { 
+    
+    // True until motors have moved (for limit switches)
+    bool start = true;
+    bool car1 = carriage == 1;
+    bool xcheck, zcheck;
+    // Print move targets to console
+    Serial.print("Moving to X to ");
+    Serial.print(xt);
+    Serial.print(" and Z to ");
+    Serial.println(zt);
+    
+    // Initialize move targets as long array
+    long targets[2];
+    targets[0] = xt;
+    targets[1] = zt;
+    
+    // Initialize pointers to motor control objects
+    AccelStepper* x;
+    AccelStepper* z;
+    MultiStepper* xz;
+    
+    // Assign pointers based on axis
+    if (car1){
+        x = & x1;
+        z = & z1;
+        xz = & x1z1;
+    } else {
+        x = & x2;
+        z = & z2;
+        xz = & x2z2;
+    }
+        
+    // Turn on motors
+    x->enableOutputs();
+    z->enableOutputs();
+    
+    // Set targets and run
+    xz->moveTo(targets);
+    // Initialize limit switch variables
+    bool xfwd = x->distanceToGo() >= 0;
+    bool zfwd = z->distanceToGo() >= 0;
+    
+    // Check limit switches before move
+    xcheck = limit(car1,true,xfwd,start);
+    zcheck = limit(car1,false,zfwd,start);
+    if (xcheck || zcheck){
+        return true;
+    }
+    
+    // Move while checking limit switches
+    else {
+        while(xz->run()) {
+            // start is true until carriage undocks
+            if (start) {
+                start = docked(carriage);
+            }
+            // limits checked once carriage undocks
+            else {
+                xcheck = limit(car1,true,xfwd,start);
+                zcheck = limit(car1,false,zfwd,start);
+                if (xcheck || zcheck){
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Turn off motors
+    x->disableOutputs();
+    z->disableOutputs();
+    
+    return false;
+}
+
+// Homes motors on limit switches
+bool home(){
+    return false;
 }
 
 // Activates water pump for stack
