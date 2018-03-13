@@ -1,7 +1,11 @@
 // Move axis motors to target point
 // (still need to add limit switches)
-bool move(uint16_t xt, uint16_t zt, uint8_t axis) { 
+bool move(uint16_t xt, uint16_t zt, uint8_t carriage) { 
     
+    // True until motors have moved (for limit switches)
+    bool start = true;
+    bool car1 = carriage == 1;
+    bool xcheck, zcheck;
     // Print move targets to console
     Serial.print("Moving to X to ");
     Serial.print(xt);
@@ -19,7 +23,7 @@ bool move(uint16_t xt, uint16_t zt, uint8_t axis) {
     MultiStepper* xz;
     
     // Assign pointers based on axis
-    if (axis == 1){
+    if (car1){
         x = & x1;
         z = & z1;
         xz = & x1z1;
@@ -35,8 +39,34 @@ bool move(uint16_t xt, uint16_t zt, uint8_t axis) {
     
     // Set targets and run
     xz->moveTo(targets);
-    bool forward = x->distanceToGo() > 0;
-    while(xz->run());
+    // Initialize limit switch variables
+    bool xfwd = x->distanceToGo() >= 0;
+    bool zfwd = z->distanceToGo() >= 0;
+    
+    // Check limit switches before move
+    xcheck = limit(car1,true,fwd,start);
+    zcheck = limit(car1,false,fwd,start);
+    if (xcheck || zcheck){
+        return true;
+    }
+    
+    // Move while checking limit switches
+    else {
+        while(xz->run()) {
+            // start is true until carriage undocks
+            if (start) {
+                start = docked(carriage);
+            }
+            // limits checked once carriage undocks
+            else {
+                xcheck = limit(car1,true,fwd,start);
+                zcheck = limit(car1,false,fwd,start);
+                if (xcheck || zcheck){
+                    break;
+                }
+            }
+        }
+    }
     
     // Turn off motors
     x->disableOutputs();
@@ -51,7 +81,7 @@ bool home(){
 
 // Checks limit switches to see if carriages
 // are in ready position (end of rails)
-bool xlim(int carriage){
+bool docked(int carriage){
     bool c1 = digitalRead(X1L) == HIGH || digitalRead(X1R) == HIGH;
     bool c2 = digitalRead(X2L) == HIGH || digitalRead(X2R) == HIGH;
     return true;
@@ -62,6 +92,135 @@ bool xlim(int carriage){
     }
 }
 
+// performs limit switch checks
+bool limit( bool car1, bool x, bool fwd, bool start){    
+    // reused booleans for up to 3 switch checks
+    bool on, off, dock;
+    // Carriage 1
+    if (car1){
+        // X Axis
+        if (x){
+            //Going Forward at Start of Motion
+            if (fwd && start){
+                on = digitalRead(X1L) == HIGH;
+                off = digitalRead(X1R) == LOW;
+                dock = docked(2);
+                return on && off && dock;
+            }
+            //Going Backward at Start of Motion
+            else if (!fwd && start){
+                on = digitalRead(X1R) == HIGH;
+                off = digitalRead(X1L) == LOW;
+                dock = docked(2);
+                return on && off && dock;
+            }
+            //Going Forward During Motion
+            else if (fwd && !start){
+                on = digitalRead(X1R) == HIGH;
+                dock = docked(2);
+                return on || !dock;
+            }
+            //Going Forward During Motion
+            else if (!fwd && !start){
+                on = digitalRead(X1L) == HIGH;
+                dock = docked(2);
+                return on || !dock;
+            }
+        }
+        // Z Axis
+        else {
+            //Going Forward at Start of Motion
+            if (fwd && start){
+                on = digitalRead(Z1B) == HIGH;
+                off = digitalRead(Z1T) == LOW;
+                dock = docked(2);
+                return on && off && dock;
+            }
+            //Going Backward at Start of Motion
+            else if (!fwd && start){
+                on = digitalRead(Z1T) == HIGH;
+                off = digitalRead(Z1B) == LOW;
+                dock = docked(2);
+                return on && off && dock;
+            }
+            //Going Forward During Motion
+            else if (fwd && !start){
+                on = digitalRead(Z1T) == HIGH;
+                dock = docked(2);
+                return on || !dock;
+            }
+            //Going Forward During Motion
+            else if (!fwd && !start){
+                on = digitalRead(Z1B) == HIGH;
+                dock = docked(2);
+                return on || !dock;
+            }
+        }
+    }
+    // Carriage 2
+    else {
+        // X Axis
+        if (x){
+            //Going Forward at Start of Motion
+            if (fwd && start){
+                on = digitalRead(X2L) == HIGH;
+                off = digitalRead(X2R) == LOW;
+                dock = docked(1);
+                return on && off && dock;
+            }
+            //Going Backward at Start of Motion
+            else if (!fwd && start){
+                on = digitalRead(X2R) == HIGH;
+                off = digitalRead(X2L) == LOW;
+                dock = docked(1);
+                return on && off && dock;
+            }
+            //Going Forward During Motion
+            else if (fwd && !start){
+                on = digitalRead(X2R) == HIGH;
+                dock = docked(1);
+                return on || !dock;
+            }
+            //Going Forward During Motion
+            else if (!fwd && !start){
+                on = digitalRead(X2L) == HIGH;
+                dock = docked(1);
+                return on || !dock;
+            }
+        }
+        // Z Axis
+        else {
+            //Going Forward at Start of Motion
+            if (fwd && start){
+                on = digitalRead(Z2B) == HIGH;
+                off = digitalRead(Z2T) == LOW;
+                dock = docked(1);
+                return on && off && dock;
+            }
+            //Going Backward at Start of Motion
+            else if (!fwd && start){
+                on = digitalRead(Z2T) == HIGH;
+                off = digitalRead(Z2B) == LOW;
+                dock = docked(1);
+                return on && off && dock;
+            }
+            //Going Forward During Motion
+            else if (fwd && !start){
+                on = digitalRead(Z2T) == HIGH;
+                dock = docked(1);
+                return on || !dock;
+            }
+            //Going Forward During Motion
+            else if (!fwd && !start){
+                on = digitalRead(Z2B) == HIGH;
+                dock = docked(1);
+                return on || !dock;
+            }
+        }
+    }
+}
+
+/*
 bool zlim(int carriage){
     bool c1 = digitalRead(Z1B) == HIGH || digitalRead(Z1T) == HIGH;
     bool c2 = digitalRead(Z2B) == HIGH || digitalRead(Z2T) == HIGH;
@@ -71,6 +230,8 @@ bool zlim(int carriage){
         case 2: return c2; // carriage 2
     }
 }
+*/
+
 // Activates water pump for stack
 void squirt(){
     

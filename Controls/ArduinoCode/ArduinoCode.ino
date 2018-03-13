@@ -1,4 +1,4 @@
-/* 
+/*
 CONTROL CODE FOR ORIGAMI TISSUE FOLDER
 NORTHEASTERN CAPSTONE PROJECT SPRING 2018
 JOE FLAHERTY
@@ -50,7 +50,7 @@ void setup() {
 void loop() {
     
     // Light Error LED for error or undocked carriages
-    if (error || !xlim(0)) {
+    if (error || !docked(0)) {
         digitalWrite(errorPin,HIGH);
         digitalWrite(readyPin,LOW);
     }
