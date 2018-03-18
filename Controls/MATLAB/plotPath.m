@@ -1,4 +1,4 @@
-function plotPath(path,ax,ffwd,framerate,writeVideo)
+function plotPath(path,ax,ffwd,framerate,makeMovie)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 x = path.(['x',num2str(ax)]);
@@ -23,9 +23,10 @@ xlabel('X Position')
 ylabel('Y Position')
 xtrack = [];
 ytrack = [];
-if writeVideo
+if makeMovie
     set(h,'visible','off')
-    v = VideoWriter('Strip Folding2.avi');
+    filename = sprintf('Axis %d Folding.avi',ax);
+    v = VideoWriter(filename);
     v.FrameRate=framerate;
     open(v)
 end
@@ -40,14 +41,14 @@ for i = 1:path.folds
         ytrack = [ytrack, z1(i,j)]; %#ok<AGROW>
         set(track,'xdata',xtrack,'ydata',ytrack)
         drawnow
-        if writeVideo
+        if makeMovie
             writeVideo(v,getframe(gcf))
         end
         pause(dt)
     end
     plot(cats{i,end}(:,1),cats{i,end}(:,2),'k-','linewidth',1)
 end
-if writeVideo
+if makeMovie
     close(v)
 end
 end

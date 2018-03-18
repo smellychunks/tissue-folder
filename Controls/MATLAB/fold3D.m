@@ -60,7 +60,7 @@ y2track = [];
 z2track = [];
 if makeMovie
     set(h,'visible','off')
-    v = VideoWriter('Strip Folding2.avi');
+    v = VideoWriter('3D Folding.avi');
     v.FrameRate=framerate;
     open(v)
 end

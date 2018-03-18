@@ -8,6 +8,7 @@ function fullPath(animate2D,animate3D,writeVideo)
 %   writeVideo hides the animations but writes them to a video file
 clc;close all
 disp('--Tissue Folder Path Generator--')
+
 %% Manage Missing Function Inputs
 if nargin < 1
     animate2D = [false false];
