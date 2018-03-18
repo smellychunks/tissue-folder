@@ -7,7 +7,7 @@ function fullPath(animate2D,animate3D,writeVideo)
 %   animate3D toggles 3D path animation of both axes
 %   writeVideo hides the animations but writes them to a video file
 clc;close all
-disp('--Tissue Folder Path Generator--')
+disp('Tissue Folder Path Generator')
 %% Manage Missing Function Inputs
 if nargin < 1
     animate2D = [false false];
@@ -71,7 +71,7 @@ in2.ds0 = ds0_2;
 in2.h0 = h0_2;
 
 % Generate Paths
-disp('Generating Paths...')
+disp('Generating Paths')
 path1 = buildPath(in1);
 path2 = buildPath(in2);
 
@@ -86,11 +86,8 @@ writeHeader(c,headerFolder); % Write files for c++
 fprintf('Header Files Written to %s\n',headerFolder)
 
 %% Animation of Strips Folding... request function inputs
-if any([animate2D  animate3D])
-    disp('Building Animations...')
-    simPath = mergePaths(path1,path2,50); % Combine paths and interpolate
-    simulate(in,simPath,false,animate2D,animate3D,writeVideo);
-end
-disp('--Done--')
+simPath = mergePaths(path1,path2,50); % Combine paths and interpolate
+simulate(in,simPath,false,animate2D,animate3D,writeVideo);
+
 end
 

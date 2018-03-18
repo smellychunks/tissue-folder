@@ -24,9 +24,9 @@ for i = 1:length(names)
         odd = mod(j,2)>0;
         if strcmp(names{i},'h')
             if odd
-                out.h1(j) = path1.h(k);
+                out.h1(j:j+1) = path1.h(k);
             else
-                out.h2(j) = path2.h(k);
+                out.h2(j-1:j) = path2.h(k);
             end
             continue
         end

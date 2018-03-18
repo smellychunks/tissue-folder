@@ -1,10 +1,9 @@
-function plotPath(path,ffwd,framerate,makeMovie)
+function plotPath(path,ax,ffwd,framerate,writeVideo)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-
-x = path.x1;
-cats = path.cats1;
-z1 = path.z1;
+x = path.(['x',num2str(ax)]);
+cats = path.(['cats',num2str(ax)]);
+z1 = path.(['z',num2str(ax)]);
 t = path.t;
 
 h = figure('units','normalized','outerposition',[0 0 1 1]);
@@ -13,7 +12,7 @@ axis equal manual
 
 xlim([min(min(x)),max(max(x))])
 ylim([-20,max(max(z1))+20])
-title(sprintf('Strip Folding (%dx Speed)',ffwd))
+title(sprintf('Axis %d Folding (%dx Speed)',ax,ffwd))
 strip = line(0,0,'LineWidth',2);
 hold on
 ends = scatter(0,0,80,'ko','filled');
@@ -24,7 +23,7 @@ xlabel('X Position')
 ylabel('Y Position')
 xtrack = [];
 ytrack = [];
-if makeMovie
+if writeVideo
     set(h,'visible','off')
     v = VideoWriter('Strip Folding2.avi');
     v.FrameRate=framerate;
@@ -41,14 +40,14 @@ for i = 1:path.folds
         ytrack = [ytrack, z1(i,j)]; %#ok<AGROW>
         set(track,'xdata',xtrack,'ydata',ytrack)
         drawnow
-        if makeMovie
+        if writeVideo
             writeVideo(v,getframe(gcf))
         end
         pause(dt)
     end
     plot(cats{i,end}(:,1),cats{i,end}(:,2),'k-','linewidth',1)
 end
-if makeMovie
+if writeVideo
     close(v)
 end
 end

@@ -198,13 +198,11 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
             if (start) {
                 start = docked(carriage);
             }
-            // limits checked once carriage undocks
-            else {
-                xcheck = limit(car1,true,xfwd,start);
-                zcheck = limit(car1,false,zfwd,start);
-                if (xcheck || zcheck){
-                    break;
-                }
+            // check limits
+            xcheck = limit(car1,true,xfwd,start);
+            zcheck = limit(car1,false,zfwd,start);
+            if (xcheck || zcheck){
+                break;
             }
         }
     }
@@ -218,6 +216,17 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
 
 // Homes motors on limit switches
 bool home(){
+    // X Axes must homed manually (to avoid crashes)
+    if (digitalRead(X1L) == HIGH || digitalRead(X2L) == HIGH) {
+        return false;
+    }
+    else {
+        x1.setCurrentPosition(0);
+        x2.setCurrentPosition(0);
+    }
+    move(0,0,1);
+    z1.setCurrentPosition(0);
+    move(0,0,2);
     return false;
 }
 

@@ -36,6 +36,7 @@ track2 =  plot3(0,0,0,'LineWidth',1,'linestyle',':','color',c2);
 dt = mean(mean(diff(t,2)))/ffwd;
 grid on
 view(45,15)
+% view(0,0)
 camproj('perspective')
 title('Strip Folding')
 xlabel('X1 Position (mm)')

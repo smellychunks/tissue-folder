@@ -1,9 +1,11 @@
-function [X,Y] = catenary(a,b,r_length,N,sagInit)
+function [X,Y,tooShort] = catenary(a,b,r_length,N,sagInit)
 % given two points a=[ax ay] and b=[bx by] in the vertical plane,
 % rope length r_length, and the number of intermediate points N,
 % outputs the coordinates X and Y of the hanging rope from a to b
 % the optional input sagInit initializes the sag parameter for the
 % root-finding procedure.
+
+tooShort = sqrt( (b(1) - a(1)).^2 + (b(2) - a(2)).^2 ) > r_length;
 
 maxIter	= 100;       % maximum number of iterations
 minGrad	= 1e-10;     % minimum norm of gradient
