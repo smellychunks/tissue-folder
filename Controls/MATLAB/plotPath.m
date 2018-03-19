@@ -20,7 +20,8 @@ track =  line(0,0,'LineWidth',1,'linestyle',':','color','k');
 dt = mean(mean(diff(t,2)))/ffwd;
 grid on
 xlabel('X Position')
-ylabel('Y Position')
+ylabel('Z Position')
+set(gca,'fontsize',18)
 xtrack = [];
 ytrack = [];
 if makeMovie
