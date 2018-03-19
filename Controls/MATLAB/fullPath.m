@@ -24,7 +24,7 @@ in.z_floor = 10; % Height of strip holder above baseplate when z bottoms out
 
 %% Strip Geometry
 strip_1_length = 250;
-strip_2_length = 250;
+strip_2_length = 200;
 in.strip_width = 10; % Strip Width
 in.thk = .04; % Strip Thickness
 
@@ -36,7 +36,7 @@ in.dx_post = 30;
 
 % Tension Factors (ex: with .98 the strip is 98% taut)
 in.T_dock = .99;
-in.T_pre = .99;
+in.T_pre = .97;
 in.T_post = .92;
 
 % Normal Folds

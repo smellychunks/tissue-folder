@@ -2,10 +2,9 @@ function out = mergePaths(path1,path2,len)
 %MERGEPATHS Combines path data structures and creates running time vector
 %   Resamples path data for evenly spaced time vector with option len input
     
-tMat = path1.t;
 names = fieldnames(path1);
-nj = 2*size(tMat,1);
-row = ones(1,size(tMat,2));
+nj = 2 * min( size(path1.t,1), size(path2.t,1) );
+row = ones(1,size(path1.t,2));
 
 if nargin<3
     len = length(row);
