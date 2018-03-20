@@ -17,8 +17,7 @@ JOE FLAHERTY
 #include "motion.h"
 
 // Status booleans
-bool done = false;
-bool error = false;
+bool homed = false, done = false, error = false;
 
 // INITIALIZATION ROUTINE
 void setup() {    
@@ -50,7 +49,7 @@ void setup() {
 void loop() {
     
     // Light Error LED for error or undocked carriages
-    if (error || !docked(0)) {
+    if (error || !docked(0,true)) {
         digitalWrite(errorPin,HIGH);
         digitalWrite(readyPin,LOW);
     }

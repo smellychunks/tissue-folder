@@ -1,18 +1,73 @@
 // Checks limit switches to see if carriages
 // are in ready position (end of rails)
-bool docked(int carriage){
-    bool c1 = digitalRead(X1L) == HIGH || digitalRead(X1R) == HIGH;
-    bool c2 = digitalRead(X2L) == HIGH || digitalRead(X2R) == HIGH;
-    return true;
-    switch(carriage){
-        case 0: return c1 && c2; // both carriages
-        case 1: return c1; // carriage 1
-        case 2: return c2; // carriage 2
+int docked(int carriage, bool x){
+/*
+returns... 
+0 if undocked
+-1 if docked left/bottom
+1 if docked right/top
+-2 if docked at both ends (error!)
+*/
+    // Check X Axis Switches
+    bool A, B, A1, B1, A2, B2
+    if (x){
+        A1 = digitalRead(X1L) == HIGH;
+        B1 =  digitalRead(X1R) == HIGH;
+        A2 = digitalRead(X2L) == HIGH;
+        B2 = digitalRead(X2R) == HIGH;
+    } 
+    // Check Z Axis Switches
+    else {
+        A1 = digitalRead(Z1B) == HIGH;
+        B1 =  digitalRead(Z1T) == HIGH;
+        A2 = digitalRead(Z2B) == HIGH;
+        B2 = digitalRead(Z2T) == HIGH;
+    }
+    // Logic for requested carriage
+    switch (carriage) {
+        // both
+        case 0: {
+            A = A1 && A2;
+            B = B1 && B2;
+        }
+        // carriage 1
+        case 1: {
+            A = A1;
+            B = B1;
+        }
+        // carriage 2
+        case 2: {
+            A = A2;
+            B = B2;
+        }
+    }
+    // undocked
+    if (!(A && B)) {
+        return 0;
+    }
+    // left/bottom dock
+    if (A && !B) {
+        return -1;
+    }
+    // right/top dock
+    if (!A && B) {
+        return 1;
+    }
+    // docked at both ends (error!)
+    else {
+        return -2;
     }
 }
 
 // performs limit switch checks
-bool limit( bool car1, bool x, bool fwd, bool start){    
+bool limit( bool car1, bool x, bool fwd, bool start){
+    /* Function inputs:
+    car1: carriage 1 or carriage 2
+    x: x axis or z axis
+    fwd: moving forward or backward
+    start: just starting motion (limit switches still pressed)
+    */
+    
     // reused booleans for up to 3 switch checks
     bool on, off, dock;
     // Carriage 1
@@ -144,7 +199,8 @@ bool limit( bool car1, bool x, bool fwd, bool start){
 bool move(uint16_t xt, uint16_t zt, uint8_t carriage) { 
     
     // True until motors have moved (for limit switches)
-    bool start = true;
+    bool startx = docked(carriage,true);
+    bool startz = docked(carriage,false);
     bool car1 = carriage == 1;
     bool xcheck, zcheck;
     // Print move targets to console
@@ -173,20 +229,16 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
         z = & z2;
         xz = & x2z2;
     }
-        
-    // Turn on motors
-    x->enableOutputs();
-    z->enableOutputs();
     
     // Set targets and run
     xz->moveTo(targets);
     // Initialize limit switch variables
-    bool xfwd = x->distanceToGo() >= 0;
-    bool zfwd = z->distanceToGo() >= 0;
+    bool fwd = x->distanceToGo() >= 0;
+    bool up = z->distanceToGo() >= 0;
     
     // Check limit switches before move
-    xcheck = limit(car1,true,xfwd,start);
-    zcheck = limit(car1,false,zfwd,start);
+    xcheck = limit(car1,true,fwd,startx);
+    zcheck = limit(car1,false,up,startz);
     if (xcheck || zcheck){
         return true;
     }
@@ -194,40 +246,49 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
     // Move while checking limit switches
     else {
         while(xz->run()) {
-            // start is true until carriage undocks
-            if (start) {
-                start = docked(carriage);
-            }
-            // check limits
-            xcheck = limit(car1,true,xfwd,start);
-            zcheck = limit(car1,false,zfwd,start);
+            xcheck = limit(car1,true,fwd,startx);
+            zcheck = limit(car1,false,up,startz);
             if (xcheck || zcheck){
+                // Home x motor on either limit switch
+                if (xcheck) {
+                    x->setCurrentPosition(xt);
+                }
+                // Home z motor on bottom limit switch only
+                if (zcheck) {
+                    if (up) {
+                        return true; // throws error
+                    } else {
+                        z->setCurrentPosition(0);
+                    }
+                }
                 break;
             }
         }
-    }
-    
-    // Turn off motors
-    x->disableOutputs();
-    z->disableOutputs();
-    
+    }  
     return false;
 }
 
 // Homes motors on limit switches
 bool home(){
     // X Axes must homed manually (to avoid crashes)
-    if (digitalRead(X1L) == HIGH || digitalRead(X2L) == HIGH) {
-        return false;
-    }
-    else {
+    if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
         x2.setCurrentPosition(0);
     }
-    move(0,0,1);
+    else {
+        return false;
+    }
+    if ( docked(1,false) > -1 ) {
+        z1.setCurrentPosition(LONG_MAX);
+        move(0,0,1);
+    }
     z1.setCurrentPosition(0);
-    move(0,0,2);
-    return false;
+    if ( docked(2,false) > -1 ) {
+        z2.setCurrentPosition(LONG_MAX);
+        move(0,0,2);
+    }
+    z2.setCurrentPosition(0);
+    return true;
 }
 
 // Activates water pump for stack
@@ -278,7 +339,7 @@ bool fold(){
                 x_dock = x2_dock[i];
                 z_dock = z2_dock[i];
             }
-            // Perform moves (3 Lines)
+            // Perform moves (3 Line segments)
             err = move(x_pre,z_pre,j);
             if (err) return true;
             err = move(x_post,z_post,j);
