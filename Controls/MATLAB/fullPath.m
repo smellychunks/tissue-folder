@@ -17,42 +17,45 @@ if nargin < 1
 elseif nargin < 3
     writeVideo = false;
 end
+if size(animate2D,2) == 1
+   animate2D = [animate2D animate2D]; 
+end
 
 %% Basic Machine Geometry
-in.x_length = 180; % Usable width of x axis rails
+in.x_length = 170; % Usable width of x axis rails
 in.z_floor = 10; % Height of strip holder above baseplate when z bottoms out
 
 %% Strip Geometry
 strip_1_length = 250;
-strip_2_length = 200;
+strip_2_length = 250;
 in.strip_width = 10; % Strip Width
 in.thk = .04; % Strip Thickness
 
 %% Fold Tuning
 
 % Control Points
-in.dx_pre = 10;
-in.dx_post = 30;
+in.dx_pre = -25;
+in.dx_post = 25;
 
 % Tension Factors (ex: with .98 the strip is 98% taut)
-in.T_dock = .99;
-in.T_pre = .97;
-in.T_post = .92;
+in.T_dock = .91;
+in.T_pre = .98;
+in.T_post = .98;
 
 % Normal Folds
 in.ds = in.strip_width + 2*in.thk; % Length used for normal folds
 in.dh = 2*in.thk; % Height change of normal folds
 
 % Initial Fold of Strip 1
-ds0_1 = in.strip_width + 3; % Strip length used for initial fold
+ds0_1 = in.strip_width + 4; % Strip length used for initial fold
 h0_1 = 0; % Height of stack after initial fold
 
 % Initial Fold of Strip 2
-ds0_2 = in.strip_width + 3; % Strip length used for initial fold
+ds0_2 = in.strip_width + 5; % Strip length used for initial fold
 h0_2 = 0; % Height of stack after initial fold
 
 %% Machine Specs
-in.p = 3; % Lead Screw Height/Revolution
+in.p = 12.7; % Lead Screw Height/Revolution
 in.r1 = 12.7; % X Driving Gear Radius
 in.N1 = 12; % X Driving Gear Teeth
 in.N2 = 16; % X Idling Gear Teeth
@@ -94,4 +97,3 @@ if any([animate2D  animate3D])
 end
 disp('--Done--')
 end
-

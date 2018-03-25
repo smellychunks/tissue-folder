@@ -15,13 +15,15 @@ s_before = s0 - (0:(n-1))*in.ds; % Remaining strip before fold
 s_after = s0 - (1:n)*in.ds; % Remaining strip after fold
 
 %% Unit matrices used below
-halfMat = ones(n,2);
-fullMat = ones(n,4);
+oneMat = ones(n,1);
+% twoMat = ones(n,2);
+threeMat = ones(n,3);
+fourMat = ones(n,4);
 
 %% Path Calculations
-s = [s_before' .* halfMat, s_after'.* halfMat]; % Remaining strip length
-x = [ 0 x_pre x_post in.x_length ] .* fullMat; % X Location of Folder
-v = [ a a b b ] .* fullMat; % X Location of fold vertex
+s = [s_before' .* threeMat, s_after'.* oneMat]; % Remaining strip length
+x = [ 0 x_pre x_post in.x_length ] .* fourMat; % X Location of Folder
+v = [ a a a b ] .* fourMat; % X Location of fold vertex
 z = sqrt( (T.*s).^2 - (x-v).^2 ) + h; % Z Location of Folder
 
 %% Adjust for Left vs Right Motion
@@ -46,7 +48,7 @@ x = x - mid;
 v = v - mid;
 %% Build Time Vector
 dt = max(abs(diff(theta_x,1,2))./xw_limit,abs(diff(theta_z,1,2))./zw_limit);
-t = fullMat;
+t = fourMat;
 for i = 1:size(t,1)
     if i==1
         t(i,1) = 0;

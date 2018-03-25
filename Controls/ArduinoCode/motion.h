@@ -9,36 +9,36 @@ returns...
 -2 if docked at both ends (error!)
 */
     // Check X Axis Switches
-    bool A, B, A1, B1, A2, B2
+    bool A, B, a1, b1, a2, b2;
     if (x){
-        A1 = digitalRead(X1L) == HIGH;
-        B1 =  digitalRead(X1R) == HIGH;
-        A2 = digitalRead(X2L) == HIGH;
-        B2 = digitalRead(X2R) == HIGH;
+        a1 = digitalRead(X1L) == HIGH;
+        b1 =  digitalRead(X1R) == HIGH;
+        a2 = digitalRead(X2L) == HIGH;
+        b2 = digitalRead(X2R) == HIGH;
     } 
     // Check Z Axis Switches
     else {
-        A1 = digitalRead(Z1B) == HIGH;
-        B1 =  digitalRead(Z1T) == HIGH;
-        A2 = digitalRead(Z2B) == HIGH;
-        B2 = digitalRead(Z2T) == HIGH;
+        a1 = digitalRead(Z1B) == HIGH;
+        b1 =  digitalRead(Z1T) == HIGH;
+        a2 = digitalRead(Z2B) == HIGH;
+        b2 = digitalRead(Z2T) == HIGH;
     }
     // Logic for requested carriage
     switch (carriage) {
         // both
         case 0: {
-            A = A1 && A2;
-            B = B1 && B2;
+            A = a1 && a2;
+            B = b1 && b2;
         }
         // carriage 1
         case 1: {
-            A = A1;
-            B = B1;
+            A = a1;
+            B = b1;
         }
         // carriage 2
         case 2: {
-            A = A2;
-            B = B2;
+            A = a2;
+            B = b2;
         }
     }
     // undocked
@@ -78,55 +78,56 @@ bool limit( bool car1, bool x, bool fwd, bool start){
             if (fwd && start){
                 on = digitalRead(X1L) == HIGH;
                 off = digitalRead(X1R) == LOW;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on && off && dock;
             }
             //Going Backward at Start of Motion
             else if (!fwd && start){
                 on = digitalRead(X1R) == HIGH;
                 off = digitalRead(X1L) == LOW;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on && off && dock;
             }
             //Going Forward During Motion
             else if (fwd && !start){
                 on = digitalRead(X1R) == HIGH;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on || !dock;
             }
             //Going Forward During Motion
             else if (!fwd && !start){
                 on = digitalRead(X1L) == HIGH;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on || !dock;
             }
         }
         // Z Axis
+        // Checking that x is docked isn't really necessary
         else {
             //Going Forward at Start of Motion
             if (fwd && start){
                 on = digitalRead(Z1B) == HIGH;
                 off = digitalRead(Z1T) == LOW;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on && off && dock;
             }
             //Going Backward at Start of Motion
             else if (!fwd && start){
                 on = digitalRead(Z1T) == HIGH;
                 off = digitalRead(Z1B) == LOW;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on && off && dock;
             }
             //Going Forward During Motion
             else if (fwd && !start){
                 on = digitalRead(Z1T) == HIGH;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on || !dock;
             }
             //Going Forward During Motion
             else if (!fwd && !start){
                 on = digitalRead(Z1B) == HIGH;
-                dock = docked(2);
+                dock = docked(2,true);
                 return on || !dock;
             }
         }
@@ -139,55 +140,56 @@ bool limit( bool car1, bool x, bool fwd, bool start){
             if (fwd && start){
                 on = digitalRead(X2L) == HIGH;
                 off = digitalRead(X2R) == LOW;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on && off && dock;
             }
             //Going Backward at Start of Motion
             else if (!fwd && start){
                 on = digitalRead(X2R) == HIGH;
                 off = digitalRead(X2L) == LOW;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on && off && dock;
             }
             //Going Forward During Motion
             else if (fwd && !start){
                 on = digitalRead(X2R) == HIGH;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on || !dock;
             }
             //Going Forward During Motion
             else if (!fwd && !start){
                 on = digitalRead(X2L) == HIGH;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on || !dock;
             }
         }
         // Z Axis
+        // Checking that x is docked isn't really necessary
         else {
             //Going Forward at Start of Motion
             if (fwd && start){
                 on = digitalRead(Z2B) == HIGH;
                 off = digitalRead(Z2T) == LOW;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on && off && dock;
             }
             //Going Backward at Start of Motion
             else if (!fwd && start){
                 on = digitalRead(Z2T) == HIGH;
                 off = digitalRead(Z2B) == LOW;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on && off && dock;
             }
             //Going Forward During Motion
             else if (fwd && !start){
                 on = digitalRead(Z2T) == HIGH;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on || !dock;
             }
             //Going Forward During Motion
             else if (!fwd && !start){
                 on = digitalRead(Z2B) == HIGH;
-                dock = docked(1);
+                dock = docked(1,true);
                 return on || !dock;
             }
         }
@@ -271,6 +273,7 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
 // Homes motors on limit switches
 bool home(){
     // X Axes must homed manually (to avoid crashes)
+    int LONG_MAX = 2147483647;
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
         x2.setCurrentPosition(0);
