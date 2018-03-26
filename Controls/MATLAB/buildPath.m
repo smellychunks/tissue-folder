@@ -1,4 +1,5 @@
 function path = buildPath(in)
+%BUILDPATH Finds folding path of single carriage
 
 %% Fold Control Points
 a = (in.x_length-in.strip_width)/2; % Leading edge of stack
@@ -16,7 +17,6 @@ s_after = s0 - (1:n)*in.ds; % Remaining strip after fold
 
 %% Unit matrices used below
 oneMat = ones(n,1);
-% twoMat = ones(n,2);
 threeMat = ones(n,3);
 fourMat = ones(n,4);
 
@@ -28,7 +28,6 @@ z = sqrt( (T.*s).^2 - (x-v).^2 ) + h; % Z Location of Folder
 
 %% Adjust for Left vs Right Motion
 evens = mod((1:n)',2) == 0;
-% x(evens,:) = fliplr(x(evens,:));
 x(evens,:) = in.x_length - x(evens,:);
 v(evens,:) = fliplr(v(evens,:));
 

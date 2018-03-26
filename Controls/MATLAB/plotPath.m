@@ -1,6 +1,6 @@
 function plotPath(path,ax,ffwd,framerate,makeMovie)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%PLOTPATH Plots folding path in 2D
+
 x = path.(['x',num2str(ax)]);
 cats = path.(['cats',num2str(ax)]);
 z1 = path.(['z',num2str(ax)]);

@@ -141,6 +141,7 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) {
                 // Home x motor on either limit switch
                 if (xcheck) {
                     x->setCurrentPosition(xt);
+                    // Z motor will continue until its target
                 }
                 // Home z motor on bottom limit switch only
                 if (zcheck) {
@@ -175,18 +176,17 @@ bool home(){
         x2.setCurrentPosition(0);
     }
     else {
+        Serial.println("ERROR: Carriages must be docked manually to -X limits.");
         return false;
     }
     if ( docked(1,false) > -1 ) {
         z1.setCurrentPosition(LONG_MAX);
         move(0,0,1,false);
     }
-    z1.setCurrentPosition(0);
     if ( docked(2,false) > -1 ) {
         z2.setCurrentPosition(LONG_MAX);
         move(0,0,2,false);
     }
-    z2.setCurrentPosition(0);
     
     // Move to starting positions
     move(x1z1_start[0],x1z1_start[1],1,false);
@@ -247,7 +247,7 @@ bool fold(){
             
             // Squirt Water onto stack
             Serial.println("Wetting the stack");
-            squirt(3000,true);
+            squirt(pump_time,true);
             
             // Report elapsed folding time
             Serial.print("Elapsed Time: ");
@@ -268,7 +268,7 @@ void manual()
 {
     int inByte;
     int dt = 100;
-    int manStep = 5;
+    int manStep = 20;
     int manPump = 1000;
     while (true) {
         inByte = Serial.read();

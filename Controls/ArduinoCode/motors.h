@@ -80,7 +80,7 @@ void initializeMotors() {
     z2.setMaxSpeed(speed_limit[1]);
     
     // Set Pump Run Speed
-    pump->setSpeed(150);
+    pump->setSpeed(pump_speed);
     pump->run(FORWARD);
     pump->run(RELEASE);
 }

@@ -1,6 +1,8 @@
 function simulate(in,path,check,animate2D,animate3D,writeVideo)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+%SIMULATE Simulates hanging strips with catenary curves
+%   check: if true, error is thrown if there's not enough slack
+%   animate2D: plays animation of 2D fold (2x1 bool; carriages independent)
+%   animate3D: plays animation of both strips folding in 3D
 if nargin<4
     animate2D = [false false];
     [animate3D,writeVideo] = deal(false); 

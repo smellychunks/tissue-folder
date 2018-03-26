@@ -1,6 +1,5 @@
 function data = removeWait(data)
-%UNTITLED14 Summary of this function goes here
-%   Detailed explanation goes here
+%REMOVEWAIT Removes rows where carriage sits and waits for other carriage
 names = fieldnames(data);
 for i = 1:length(names)
    if any(size(data.(names{i})) ~= size(data.t)) || strcmp(names{i},'t')

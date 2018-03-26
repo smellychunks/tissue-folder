@@ -43,8 +43,8 @@ in.T_pre = .98;
 in.T_post = .98;
 
 % Water Pump Settings
-in.pump_speed = .7; % Run speed of pump (1 = max speed, 0 = stopped)
-in.pump_time = 1; % Run time of pump for single squirt (seconds)
+in.pump_speed = .7;
+in.pump
 
 % Normal Folds
 in.ds = in.strip_width + 2*in.thk; % Length used for normal folds

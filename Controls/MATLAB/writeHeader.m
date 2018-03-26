@@ -1,6 +1,5 @@
 function writeHeader(data,folder)
-%UNTITLED8 Summary of this function goes here
-%   Detailed explanation goes here
+%WRITEHEADER Writes a .h (C++) file for each field in data structure
 if nargin<2
     folder = '';
 end

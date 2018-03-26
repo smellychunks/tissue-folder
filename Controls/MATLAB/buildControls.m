@@ -1,8 +1,9 @@
 function c = buildControls(in,path)
-%UNTITLED11 Summary of this function goes here
-%   Detailed explanation goes here
+%BUILDCONTROLS Reformats input structure to be written as C++ input
 
 c.speed_limit = 200/60*[in.x_rpm_limit in.z_rpm_limit]; % steps/sec
+% Pump speed is 0-255 scale, pump time is in milliseconds
+c.pump_settings = [min(255,round(in.pump_speed*255)) 1000*in.pump_time ];
 for i = 1:2
     xi = ['x',num2str(i)];
     zi = ['z',num2str(i)];
