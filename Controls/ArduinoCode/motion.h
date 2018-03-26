@@ -55,154 +55,35 @@ returns...
     }
     // docked at both ends (error!)
     else {
+        Serial.println("Opposing limit switches both active!");
         return -2;
     }
 }
 
-// performs limit switch checks
-bool limit( bool car1, bool x, bool fwd, bool start){
+// Returns true when the motor should stop
+bool limit( bool car1, bool x, bool fwd){
     /* Function inputs:
     car1: carriage 1 or carriage 2
     x: x axis or z axis
     fwd: moving forward or backward
-    start: just starting motion (limit switches still pressed)
     */
     
-    // reused booleans for up to 3 switch checks
-    bool on, off, dock;
-    // Carriage 1
-    if (car1){
-        // X Axis
-        if (x){
-            //Going Forward at Start of Motion
-            if (fwd && start){
-                on = digitalRead(X1L) == HIGH;
-                off = digitalRead(X1R) == LOW;
-                dock = docked(2,true);
-                return on && off && dock;
-            }
-            //Going Backward at Start of Motion
-            else if (!fwd && start){
-                on = digitalRead(X1R) == HIGH;
-                off = digitalRead(X1L) == LOW;
-                dock = docked(2,true);
-                return on && off && dock;
-            }
-            //Going Forward During Motion
-            else if (fwd && !start){
-                on = digitalRead(X1R) == HIGH;
-                dock = docked(2,true);
-                return on || !dock;
-            }
-            //Going Forward During Motion
-            else if (!fwd && !start){
-                on = digitalRead(X1L) == HIGH;
-                dock = docked(2,true);
-                return on || !dock;
-            }
-        }
-        // Z Axis
-        // Checking that x is docked isn't really necessary
-        else {
-            //Going Forward at Start of Motion
-            if (fwd && start){
-                on = digitalRead(Z1B) == HIGH;
-                off = digitalRead(Z1T) == LOW;
-                dock = docked(2,true);
-                return on && off && dock;
-            }
-            //Going Backward at Start of Motion
-            else if (!fwd && start){
-                on = digitalRead(Z1T) == HIGH;
-                off = digitalRead(Z1B) == LOW;
-                dock = docked(2,true);
-                return on && off && dock;
-            }
-            //Going Forward During Motion
-            else if (fwd && !start){
-                on = digitalRead(Z1T) == HIGH;
-                dock = docked(2,true);
-                return on || !dock;
-            }
-            //Going Forward During Motion
-            else if (!fwd && !start){
-                on = digitalRead(Z1B) == HIGH;
-                dock = docked(2,true);
-                return on || !dock;
-            }
-        }
-    }
-    // Carriage 2
-    else {
-        // X Axis
-        if (x){
-            //Going Forward at Start of Motion
-            if (fwd && start){
-                on = digitalRead(X2L) == HIGH;
-                off = digitalRead(X2R) == LOW;
-                dock = docked(1,true);
-                return on && off && dock;
-            }
-            //Going Backward at Start of Motion
-            else if (!fwd && start){
-                on = digitalRead(X2R) == HIGH;
-                off = digitalRead(X2L) == LOW;
-                dock = docked(1,true);
-                return on && off && dock;
-            }
-            //Going Forward During Motion
-            else if (fwd && !start){
-                on = digitalRead(X2R) == HIGH;
-                dock = docked(1,true);
-                return on || !dock;
-            }
-            //Going Forward During Motion
-            else if (!fwd && !start){
-                on = digitalRead(X2L) == HIGH;
-                dock = docked(1,true);
-                return on || !dock;
-            }
-        }
-        // Z Axis
-        // Checking that x is docked isn't really necessary
-        else {
-            //Going Forward at Start of Motion
-            if (fwd && start){
-                on = digitalRead(Z2B) == HIGH;
-                off = digitalRead(Z2T) == LOW;
-                dock = docked(1,true);
-                return on && off && dock;
-            }
-            //Going Backward at Start of Motion
-            else if (!fwd && start){
-                on = digitalRead(Z2T) == HIGH;
-                off = digitalRead(Z2B) == LOW;
-                dock = docked(1,true);
-                return on && off && dock;
-            }
-            //Going Forward During Motion
-            else if (fwd && !start){
-                on = digitalRead(Z2T) == HIGH;
-                dock = docked(1,true);
-                return on || !dock;
-            }
-            //Going Forward During Motion
-            else if (!fwd && !start){
-                on = digitalRead(Z2B) == HIGH;
-                dock = docked(1,true);
-                return on || !dock;
-            }
-        }
-    }
+    // <0 if left/bottom switch hit
+    // >0 if right/top switch hit
+    int thisCar = docked(car1,x);
+    // False if other carriage is docked in X
+    bool otherCar = !docked(!car1,true);
+    
+    // Returns based on forward or reverse motion
+    if (fwd) return thisCar>0 || otherCar;
+    else return thisCar<0 || otherCar;
 }
 
 // Move axis motors to target point
 // (still need to add limit switches)
-bool move(uint16_t xt, uint16_t zt, uint8_t carriage) { 
+bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) { 
     
     // True until motors have moved (for limit switches)
-    bool startx = docked(carriage,true);
-    bool startz = docked(carriage,false);
     bool car1 = carriage == 1;
     bool xcheck, zcheck;
     // Print move targets to console
@@ -233,23 +114,29 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
     }
     
     // Set targets and run
-    xz->moveTo(targets);
+    if (relative) {
+        x->move(targets[0]);
+        z->move(targets[1]);
+    }
+    else xz->moveTo(targets);
+    
     // Initialize limit switch variables
     bool fwd = x->distanceToGo() >= 0;
     bool up = z->distanceToGo() >= 0;
     
     // Check limit switches before move
-    xcheck = limit(car1,true,fwd,startx);
-    zcheck = limit(car1,false,up,startz);
+    xcheck = limit(car1,true,fwd);
+    zcheck = limit(car1,false,up);
     if (xcheck || zcheck){
+        Serial.println("Move cancelled due to limit switch!");
         return true;
     }
     
     // Move while checking limit switches
     else {
         while(xz->run()) {
-            xcheck = limit(car1,true,fwd,startx);
-            zcheck = limit(car1,false,up,startz);
+            xcheck = limit(car1,true,fwd);
+            zcheck = limit(car1,false,up);
             if (xcheck || zcheck){
                 // Home x motor on either limit switch
                 if (xcheck) {
@@ -258,6 +145,7 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
                 // Home z motor on bottom limit switch only
                 if (zcheck) {
                     if (up) {
+                        Serial.println("Z ceiling crash!");
                         return true; // throws error
                     } else {
                         z->setCurrentPosition(0);
@@ -270,9 +158,17 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage) {
     return false;
 }
 
-// Homes motors on limit switches
+// Runs water pump (pumpTime in milliseconds)
+void squirt(int pumpTime, bool fwd){
+    if (fwd) pump->run(FORWARD);
+    else pump->run(BACKWARD);
+    delay(pumpTime);
+    pump->run(RELEASE);
+}
+
+// Homes motors on limit switches and moves to starting position
 bool home(){
-    // X Axes must homed manually (to avoid crashes)
+    // X Axes must be homed manually (to avoid crashes)
     int LONG_MAX = 2147483647;
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
@@ -283,20 +179,19 @@ bool home(){
     }
     if ( docked(1,false) > -1 ) {
         z1.setCurrentPosition(LONG_MAX);
-        move(0,0,1);
+        move(0,0,1,false);
     }
     z1.setCurrentPosition(0);
     if ( docked(2,false) > -1 ) {
         z2.setCurrentPosition(LONG_MAX);
-        move(0,0,2);
+        move(0,0,2,false);
     }
     z2.setCurrentPosition(0);
-    return true;
-}
-
-// Activates water pump for stack
-void squirt(){
     
+    // Move to starting positions
+    move(x1z1_start[0],x1z1_start[1],1,false);
+    move(x2z2_start[0],x2z2_start[1],2,false);
+    return true;
 }
 
 // Controls folding motion
@@ -314,7 +209,7 @@ bool fold(){
     uint16_t x_dock;
     uint16_t z_dock;
     
-    // Move motors... for each fold, for each axis
+    // Move motors... for each fold (i), for each carriage (j)
     for (int i = 0; i<n-1; i++){
         Serial.print("\n----------------------------\n\n");
         for (int j = 1; j<=2; j++){
@@ -343,16 +238,16 @@ bool fold(){
                 z_dock = z2_dock[i];
             }
             // Perform moves (3 Line segments)
-            err = move(x_pre,z_pre,j);
+            err = move(x_pre,z_pre,j,false);
             if (err) return true;
-            err = move(x_post,z_post,j);
+            err = move(x_post,z_post,j,false);
             if (err) return true;
-            err = move(x_dock,z_dock,j);
+            err = move(x_dock,z_dock,j,false);
             if (err) return true;
             
             // Squirt Water onto stack
             Serial.println("Wetting the stack");
-            squirt();
+            squirt(3000,true);
             
             // Report elapsed folding time
             Serial.print("Elapsed Time: ");
@@ -366,4 +261,92 @@ bool fold(){
     Serial.println("\n------------Done------------\n");
     delay(100);
     return(err);
+}
+
+// Control motors via keyboard over serial
+void manual()
+{
+    int inByte;
+    int dt = 100;
+    int manStep = 5;
+    int manPump = 1000;
+    while (true) {
+        inByte = Serial.read();
+        switch (inByte) {
+            // Carriage 1
+            case 'a': {
+                Serial.println("X1 Left");
+                move(0,-manStep,1,true);
+                delay(dt);
+                break;
+            }
+            case 'd': {
+                Serial.println("X1 Right");
+                move(0,manStep,1,true);
+                delay(dt);
+                break;
+            }
+            case 's': {
+                Serial.println("Z1 Down");
+                move(-manStep,0,1,true);
+                delay(dt);
+                break;
+            }
+            case 'w': {
+                Serial.println("Z1 Up");
+                move(manStep,0,1,true);
+                delay(dt);
+                break;
+            }
+            // Carriage 2
+            case 'A': {
+                Serial.println("X2 Left");
+                move(0,-manStep,2,true);
+                delay(dt);
+                break;
+            }
+            case 'D': {
+                Serial.println("X2 Right");
+                move(0,manStep,2,true);
+                delay(dt);
+                break;
+            }
+            case 'S': {
+                Serial.println("Z2 Down");
+                move(-manStep,0,2,true);
+                delay(dt);
+                break;
+            }
+            case 'W': {
+                Serial.println("Z2 Up");
+                move(manStep,0,2,true);
+                delay(dt);
+                break;
+            }
+            // Pump
+            case 'e': {
+                Serial.println("Pump Forward");
+                squirt(manPump,true);
+                delay(dt);
+                break;
+            }
+            case 'q': {
+                Serial.println("Pump Reverse");
+                squirt(manPump,false);
+                delay(dt);
+                break;
+            }
+            // Reset
+            case 'x': {
+                resetFunc();
+                break;
+            }
+            // Exit
+            case 'm': {
+                Serial.println("Manual Deactivated");
+                return;
+            }
+            default: {} break;
+        }
+    }    
 }

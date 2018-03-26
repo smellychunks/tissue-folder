@@ -3,7 +3,7 @@ CONTROL CODE FOR ORIGAMI TISSUE FOLDER
 NORTHEASTERN CAPSTONE PROJECT SPRING 2018
 JOE FLAHERTY
 */
-
+void(* resetFunc) (void) = 0;
 // Map of variables written to .h files by MATLAB
 #include "map.h"
 
@@ -17,7 +17,9 @@ JOE FLAHERTY
 #include "motion.h"
 
 // Status booleans
-bool homed = false, done = false, error = false;
+bool homed = false, done = false;
+int inByte;
+int dt = 100;
 
 // INITIALIZATION ROUTINE
 void setup() {    
@@ -26,51 +28,86 @@ void setup() {
     Serial.println("--Origami Tissue Folder--");
     Serial.println("Initializing Pins");
     initializePins();
-    digitalWrite(workingPin,HIGH);
     Serial.println("Initializing Motors");
     initializeMotors();
-    
-    //REPLACE WITH HOMING LATER
-    x1.setCurrentPosition(x1z1_start[0]);
-    z1.setCurrentPosition(x1z1_start[1]);
-    x2.setCurrentPosition(x2z2_start[0]);
-    z2.setCurrentPosition(x2z2_start[1]);
-    
-    Serial.println("Homing Motors");
-    error = home();
-    if (!error) {
-        Serial.println("Startup Complete");
-        Serial.print("Load Strips Now. "); 
-        Serial.println("Press GO to Fold");
-    }
+    Serial.println("Startup Complete.");
+    Serial.println("Do not load strips until motors are homed.");
+    Serial.println("Press 'h' to home motors.");
+    Serial.println("Press 'c' to check limit switches.");
+    Serial.println("Press 'm' to for manual control.");
 }
 
 // MAIN PROGRAM
 void loop() {
     
-    // Light Error LED for error or undocked carriages
-    if (error || !docked(0,true)) {
-        digitalWrite(errorPin,HIGH);
-        digitalWrite(readyPin,LOW);
-    }
-    
-    // Light Ready LED if folding was already performed
-    else if (done){
-        digitalWrite(readyPin,HIGH);   
-    }
-    
-    // If Go buttton pressed, begin folding
-    else if (digitalRead(goPin) == LOW){
-        digitalWrite(readyPin,LOW);
-        digitalWrite(workingPin,HIGH);
-        Serial.println("Folding Started");
-        error = fold();
-        done = true;
-        digitalWrite(workingPin,LOW);
-    }
-    
-    // Otherwise, light Ready LED
-    else {
-        digitalWrite(readyPin,HIGH);
+    if (Serial.available() > 0)
+    {
+        inByte = Serial.read();
+        switch (inByte) {
+            // Home
+            case 'h': {
+                if (done) {
+                    Serial.println("Remove strips then press 'x' to reset");
+                    break;
+                }
+                Serial.println("Homing Motors");
+                delay(dt);
+                homed = home();
+                Serial.println("Load strips then press 'f' to fold.");
+                break;
+            }
+            // Fold
+            case 'f': {
+                if (!homed) {
+                    Serial.println("Press 'h' home motors. Don't load strips yet.");
+                    break;
+                }
+                Serial.println("Folding Strips");
+                delay(dt);
+                done = fold();
+                if (!done) {
+                    Serial.println("Error during folding. AUTO RESET.");
+                    resetFunc();
+                }
+                Serial.println("Done folding. Remove strips then press 'x' to reset.");
+                break;
+            }
+            // RESET (KILL SWITCH)
+            case 'x': {
+                Serial.println("USER RESET");
+                delay(dt);
+                resetFunc();
+                break;
+            }
+            // Check Limit Switches
+            case 'c': {
+                Serial.println("Limit Switches");
+                Serial.print("X1L\t");
+                Serial.println(digitalRead(X1L));
+                Serial.print("X1R\t");
+                Serial.println(digitalRead(X1R));
+                Serial.print("X2L\t");
+                Serial.println(digitalRead(X2L));
+                Serial.print("X2R\t");
+                Serial.println(digitalRead(X2R));
+                Serial.print("Z1B\t");
+                Serial.println(digitalRead(Z1B));
+                Serial.print("Z1T\t");
+                Serial.println(digitalRead(Z1T));
+                Serial.print("Z2B\t");
+                Serial.println(digitalRead(Z2B));
+                Serial.print("Z2T\t");
+                Serial.println(digitalRead(Z2T));
+                delay(dt);
+                break;
+            }
+            // Manual
+            case 'm': {
+                Serial.println("Manual Activated");
+                delay(dt);
+                manual();
+            }
+            default: {} break;
+        }
     }
 }

@@ -12,7 +12,7 @@ const uint16_t x1z1_start [] = {
 const uint16_t x2z2_start [] = {
     #include "x2z2_start.h"
 }; 
-
+/*
 const uint16_t x1z1_length [] = {
     #include "x1z1_length.h"
 }; 
@@ -20,7 +20,7 @@ const uint16_t x1z1_length [] = {
 const uint16_t x2z2_length [] = {
     #include "x2z2_length.h"
 }; 
-
+*/
 const uint16_t x1_pre [] = {
     #include "x1_pre.h"
 }; 

@@ -5,18 +5,20 @@
 #include <MultiStepper.h>
 
 // Initialize Shields
-Adafruit_MotorShield AFMSbot(0x61); // Rightmost jumper closed
-Adafruit_MotorShield AFMStop(0x60); // Default address, no jumpers
+Adafruit_MotorShield MS1(0x60); // Default address, no jumpers
+Adafruit_MotorShield MS2(0x61); // Rightmost jumper closed
+Adafruit_MotorShield MS3(0x62); // Second from right jumper
 
-// Connect two steppers with 200 steps per revolution (1.8 degree)
-// to the top shield
-Adafruit_StepperMotor *x1s = AFMStop.getStepper(200, 1);
-Adafruit_StepperMotor *z1s = AFMStop.getStepper(200, 2);
+// Carriage 1 Steppers
+Adafruit_StepperMotor *x1s = MS1.getStepper(200, 1);
+Adafruit_StepperMotor *z1s = MS1.getStepper(200, 2);
 
-// Connect one stepper with 200 steps per revolution (1.8 degree)
-// to the bottom shield
-Adafruit_StepperMotor *x2s = AFMSbot.getStepper(200, 1);
-Adafruit_StepperMotor *z2s = AFMSbot.getStepper(200, 2);
+// Carriage 2 Steppers
+Adafruit_StepperMotor *x2s = MS2.getStepper(200, 1);
+Adafruit_StepperMotor *z2s = MS2.getStepper(200, 2);
+
+// Water Pump (Shield 3)
+Adafruit_DCMotor *pump = MS3.getMotor(1);
 
 // you can change these to DOUBLE or INTERLEAVE or MICROSTEP!
 // wrappers for the first motor!
@@ -49,7 +51,7 @@ void backwardstep4() {
   z2s->onestep(BACKWARD, SINGLE);
 }
 
-// Now we'll wrap the 3 steppers in an AccelStepper object
+// Now we'll wrap the steppers in an AccelStepper object
 AccelStepper x1(forwardstep1, backwardstep1);
 AccelStepper z1(forwardstep2, backwardstep2);
 AccelStepper x2(forwardstep3, backwardstep3);
@@ -61,8 +63,9 @@ MultiStepper x2z2;
 
 void initializeMotors() {
     //Connect to Shields
-    AFMSbot.begin(); // Start the bottom shield
-    AFMStop.begin(); // Start the top shield
+    MS1.begin();
+    MS2.begin();
+    MS3.begin();
     
     // Give motors to MultiStepper to manage
     x1z1.addStepper(x1);
@@ -75,4 +78,9 @@ void initializeMotors() {
     x2.setMaxSpeed(speed_limit[0]);
     z1.setMaxSpeed(speed_limit[1]);
     z2.setMaxSpeed(speed_limit[1]);
+    
+    // Set Pump Run Speed
+    pump->setSpeed(150);
+    pump->run(FORWARD);
+    pump->run(RELEASE);
 }
