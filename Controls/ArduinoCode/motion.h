@@ -115,15 +115,19 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) {
     
     // Set targets and run
     if (relative) {
-        x->move(targets[0]);
-        z->move(targets[1]);
+        x->setCurrentPosition(600);
+        z->setCurrentPosition(600);
+        targets[0] += x->currentPosition();
+        targets[1] += z->currentPosition();
+        //x->move(targets[0]);
+        //z->move(targets[1]);
     }
-    else xz->moveTo(targets);
+    xz->moveTo(targets);
     
     // Initialize limit switch variables
     bool fwd = x->distanceToGo() >= 0;
     bool up = z->distanceToGo() >= 0;
-    
+    /*
     // Check limit switches before move
     xcheck = limit(car1,true,fwd);
     zcheck = limit(car1,false,up);
@@ -131,31 +135,32 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) {
         Serial.println("Move cancelled due to limit switch!");
         return true;
     }
-    
+    */
     // Move while checking limit switches
-    else {
-        while(xz->run()) {
-            xcheck = limit(car1,true,fwd);
-            zcheck = limit(car1,false,up);
-            if (xcheck || zcheck){
-                // Home x motor on either limit switch
-                if (xcheck) {
-                    x->setCurrentPosition(xt);
-                    // Z motor will continue until its target
-                }
-                // Home z motor on bottom limit switch only
-                if (zcheck) {
-                    if (up) {
-                        Serial.println("Z ceiling crash!");
-                        return true; // throws error
-                    } else {
-                        z->setCurrentPosition(0);
-                    }
-                }
-                break;
+ 
+    while(xz->run()) {
+        /*
+        xcheck = limit(car1,true,fwd);
+        zcheck = limit(car1,false,up);
+        if (xcheck || zcheck){
+            // Home x motor on either limit switch
+            if (xcheck) {
+                x->setCurrentPosition(xt);
+                // Z motor will continue until its target
             }
-        }
-    }  
+            // Home z motor on bottom limit switch only
+            if (zcheck) {
+                if (up) {
+                    Serial.println("Z ceiling crash!");
+                    return true; // throws error
+                } else {
+                    z->setCurrentPosition(0);
+                }
+            }
+            break;
+        } */
+    }
+
     return false;
 }
 
@@ -170,6 +175,7 @@ void squirt(int pumpTime, bool fwd){
 // Homes motors on limit switches and moves to starting position
 bool home(){
     // X Axes must be homed manually (to avoid crashes)
+    /*
     int LONG_MAX = 2147483647;
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
@@ -187,7 +193,7 @@ bool home(){
         z2.setCurrentPosition(LONG_MAX);
         move(0,0,2,false);
     }
-    
+    */
     // Move to starting positions
     move(x1z1_start[0],x1z1_start[1],1,false);
     move(x2z2_start[0],x2z2_start[1],2,false);
@@ -268,56 +274,56 @@ void manual()
 {
     int inByte;
     int dt = 100;
-    int manStep = 20;
+    int manStep = 100;
     int manPump = 1000;
     while (true) {
         inByte = Serial.read();
         switch (inByte) {
             // Carriage 1
-            case 'a': {
+            case 's': {
                 Serial.println("X1 Left");
                 move(0,-manStep,1,true);
                 delay(dt);
                 break;
             }
-            case 'd': {
+            case 'w': {
                 Serial.println("X1 Right");
                 move(0,manStep,1,true);
                 delay(dt);
                 break;
             }
-            case 's': {
+            case 'a': {
                 Serial.println("Z1 Down");
                 move(-manStep,0,1,true);
                 delay(dt);
                 break;
             }
-            case 'w': {
+            case 'd': {
                 Serial.println("Z1 Up");
                 move(manStep,0,1,true);
                 delay(dt);
                 break;
             }
             // Carriage 2
-            case 'A': {
+            case 'S': {
                 Serial.println("X2 Left");
                 move(0,-manStep,2,true);
                 delay(dt);
                 break;
             }
-            case 'D': {
+            case 'W': {
                 Serial.println("X2 Right");
                 move(0,manStep,2,true);
                 delay(dt);
                 break;
             }
-            case 'S': {
+            case 'A': {
                 Serial.println("Z2 Down");
                 move(-manStep,0,2,true);
                 delay(dt);
                 break;
             }
-            case 'W': {
+            case 'D': {
                 Serial.println("Z2 Up");
                 move(manStep,0,2,true);
                 delay(dt);
@@ -338,6 +344,8 @@ void manual()
             }
             // Reset
             case 'x': {
+                Serial.println("USER RESET");
+                delay(dt);
                 resetFunc();
                 break;
             }

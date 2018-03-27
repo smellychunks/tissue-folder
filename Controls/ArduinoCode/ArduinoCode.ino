@@ -106,6 +106,8 @@ void loop() {
                 Serial.println("Manual Activated");
                 delay(dt);
                 manual();
+                homed = false;
+                Serial.println("Motors must be homed again.");
             }
             default: {} break;
         }

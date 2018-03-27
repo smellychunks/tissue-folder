@@ -5,9 +5,9 @@
 #include <MultiStepper.h>
 
 // Initialize Shields
-Adafruit_MotorShield MS1(0x60); // Default address, no jumpers
+Adafruit_MotorShield MS1(0x62); // Default address, no jumpers
 Adafruit_MotorShield MS2(0x61); // Rightmost jumper closed
-Adafruit_MotorShield MS3(0x62); // Second from right jumper
+Adafruit_MotorShield MS3(0x60); // Second from right jumper
 
 // Carriage 1 Steppers
 Adafruit_StepperMotor *x1s = MS1.getStepper(200, 1);
