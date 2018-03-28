@@ -64,8 +64,8 @@ in.r1 = 12.7; % X Driving Gear Radius
 in.N1 = 12; % X Driving Gear Teeth
 in.N2 = 16; % X Idling Gear Teeth
 in.nstep = 200; % Motor Steps/Revolution
-in.x_rpm_limit = 30; % X Motor Speed Limit (rpm)
-in.z_rpm_limit = 30; % Z Motor Speed Limit (rpm)
+in.x_rpm_limit = 20; % X Motor Speed Limit (rpm)
+in.z_rpm_limit = 20; % Z Motor Speed Limit (rpm)
 
 %% Generate Path for each strip
 
