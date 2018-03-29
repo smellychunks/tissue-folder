@@ -3,6 +3,7 @@
 #include <AccelStepper.h>
 #include <Adafruit_MotorShield.h>
 #include <MultiStepper.h>
+#include <Servo.h>
 
 // Initialize Shields
 Adafruit_MotorShield MS1(0x62); // Default address, no jumpers
@@ -19,6 +20,9 @@ Adafruit_StepperMotor *z2s = MS2.getStepper(200, 2);
 
 // Water Pump (Shield 3)
 Adafruit_DCMotor *pump = MS3.getMotor(1);
+
+// Arm for water tube
+Servo arm;
 
 // you can change these to DOUBLE or INTERLEAVE or MICROSTEP!
 // wrappers for the first motor!
@@ -83,4 +87,8 @@ void initializeMotors() {
     pump->setSpeed(pump_speed);
     pump->run(FORWARD);
     pump->run(RELEASE);
+    
+    // Set Arm to Rest Position
+    arm.attach(9);
+    arm.write(arm_rest);
 }

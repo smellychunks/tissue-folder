@@ -20,8 +20,7 @@ end
 if size(animate2D,2) == 1
    animate2D = [animate2D animate2D]; 
 end
-
-%% *********************USER INPUTS BELOW*********************************
+%% ************************USER INPUTS*************************************
 %% Basic Machine Geometry
 in.x_length = 170; % Usable width of x axis rails
 in.z_floor = 10; % Height of strip holder above baseplate when z bottoms out

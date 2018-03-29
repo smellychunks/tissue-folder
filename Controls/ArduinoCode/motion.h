@@ -166,10 +166,12 @@ bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) {
 
 // Runs water pump (pumpTime in milliseconds)
 void squirt(int pumpTime, bool fwd){
+    arm.write(arm_active);
     if (fwd) pump->run(FORWARD);
     else pump->run(BACKWARD);
     delay(pumpTime);
     pump->run(RELEASE);
+    arm.write(arm_rest);
 }
 
 // Homes motors on limit switches and moves to starting position

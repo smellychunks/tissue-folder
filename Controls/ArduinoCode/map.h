@@ -18,6 +18,8 @@ const uint16_t pump_settings [] = {
 };
 const uint16_t pump_speed = pump_settings[0];
 const uint16_t pump_time = pump_settings[1];
+const uint16_t arm_rest = pump_settings[2];
+const uint16_t arm_active = pump_settings[3];
 
 const uint16_t x1_pre [] = {
     #include "x1_pre.h"
