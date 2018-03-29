@@ -10,7 +10,7 @@ T = [in.T_dock in.T_pre in.T_post in.T_dock];
 
 %% Initial Calculations
 s0 = in.strip_length - in.ds0; % Strip length when auto-folding starts
-n = floor( in.T_dock*(s0 - a) / in.ds ); % Number of folds to perform
+n = floor( (s0 - a/in.T_dock) / in.ds ); % Number of folds to perform
 h = in.h0 + (0:(n-1))'*in.dh - in.z_floor; % Height of stack
 s_before = s0 - (0:(n-1))*in.ds; % Remaining strip before fold
 s_after = s0 - (1:n)*in.ds; % Remaining strip after fold

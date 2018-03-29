@@ -26,7 +26,7 @@ if ( any(any(short1)) || any(any(short2)) ) && check
 end
 
 % Play Animation
-ffwd = 5;
+ffwd = 10;
 framerate = 20;
 for i = 1:2
    if animate2D(i)
