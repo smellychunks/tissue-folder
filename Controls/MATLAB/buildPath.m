@@ -29,7 +29,7 @@ z = sqrt( (T.*s).^2 - (x-v).^2 ) + h; % Z Location of Folder
 %% Adjust for Left vs Right Motion
 evens = mod((1:n)',2) == 0;
 x(evens,:) = in.x_length - x(evens,:);
-v(evens,:) = fliplr(v(evens,:));
+v(evens,:) = in.x_length - v(evens,:);
 
 %% Convert to Motor Steps
 xw_limit = pi/30 * in.x_rpm_limit;
