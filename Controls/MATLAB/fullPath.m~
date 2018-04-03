@@ -17,9 +17,6 @@ if nargin < 1
     skip = false;
 elseif nargin < 3
     writeVideo = false;
-    skip = false;
-elseif nargin < 4
-    skip = false;
 end
 if size(animate2D,2) == 1
    animate2D = [animate2D animate2D]; 

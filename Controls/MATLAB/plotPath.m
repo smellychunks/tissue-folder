@@ -1,4 +1,4 @@
-function plotPath(path,ax,ffwd,framerate,makeMovie)
+function plotPath(path,ax,ffwd,framerate,makeMovie,skip)
 %PLOTPATH Plots folding path in 2D
 
 x = path.(['x',num2str(ax)]);
@@ -11,7 +11,7 @@ clf
 axis equal manual
 
 xlim([min(min(x)),max(max(x))])
-ylim([-20,max(max(z1))+20])
+ylim([-40,max(max(z1))+20])
 title(sprintf('Axis %d Folding (%dx Speed)',ax,ffwd))
 strip = line(0,0,'LineWidth',2);
 hold on
@@ -31,16 +31,23 @@ if makeMovie
     v.FrameRate=framerate;
     open(v)
 end
+if skip
+    jList = [1 path.points];
+else
+    jList = 1:path.points;
+end
 for i = 1:path.folds
     disp(i)
     plot(cats{i,1}(:,1),cats{i,1}(:,2),'k-','linewidth',1)
-    for j = 1:path.points
+    for j = jList
         set(strip,'xdata',cats{i,j}(:,1),'ydata',cats{i,j}(:,2))
         set(ends,'xdata',[cats{i,j}(1,1) cats{i,j}(end,1)],...
             'ydata',[cats{i,j}(1,2),cats{i,j}(end,2)])
         xtrack = [xtrack, x(i,j)]; %#ok<AGROW>
         ytrack = [ytrack, z1(i,j)]; %#ok<AGROW>
-        set(track,'xdata',xtrack,'ydata',ytrack)
+        if ~skip
+            set(track,'xdata',xtrack,'ydata',ytrack)
+        end
         drawnow
         if makeMovie
             writeVideo(v,getframe(gcf))

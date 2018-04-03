@@ -1,11 +1,12 @@
-function simulate(in,path,check,animate2D,animate3D,writeVideo)
+function simulate(in,path,check,animate2D,animate3D,writeVideo,skip)
 %SIMULATE Simulates hanging strips with catenary curves
 %   check: if true, error is thrown if there's not enough slack
 %   animate2D: plays animation of 2D fold (2x1 bool; carriages independent)
 %   animate3D: plays animation of both strips folding in 3D
 if nargin<4
     animate2D = [false false];
-    [animate3D,writeVideo] = deal(false); 
+    [animate3D,writeVideo] = deal(false);
+    skip = false;
 end
 [short1, short2] = deal(false(path.folds,path.points));
 [path.cats1, path.cats2] = deal(cell(path.folds,path.points));
@@ -30,10 +31,10 @@ ffwd = 10;
 framerate = 20;
 for i = 1:2
    if animate2D(i)
-       plotPath(path,i,ffwd,framerate,writeVideo);
+       plotPath(path,i,ffwd,framerate,writeVideo,skip);
    end
 end
 if animate3D
-    fold3D(path,in.strip_width,ffwd,framerate,writeVideo)
+    fold3D(path,in.strip_width,ffwd,framerate,writeVideo,skip)
 end
 end

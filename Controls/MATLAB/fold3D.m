@@ -1,4 +1,4 @@
-function fold3D(path, width, ffwd,framerate,makeMovie)
+function fold3D(path, width, ffwd,framerate,makeMovie, skip)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -48,7 +48,7 @@ xlim([min(min(x1)),max(max(x1))])
 xl = xlim;
 ylim(xl);
 % yl = ylim;
-zlim([-20,max(max(z1))+20])
+zlim([-40,max(max(z1))+20])
 % zl = zlim;
 
 light%('Position',[xl(end) yl(end) zl(end)]);
@@ -64,11 +64,16 @@ if makeMovie
     v.FrameRate=framerate;
     open(v)
 end
+if skip
+    jList = [1 path.points];
+else
+    jList = 1:path.points;
+end
 for i = 1:path.folds
     disp(i)
     plot3(cats1{i,1}(:,1),b0,cats1{i,1}(:,2),'--','linewidth',1,'color',c1)
     plot3(b0,cats2{i,1}(:,1),cats2{i,1}(:,2),'--','linewidth',1,'color',c2)
-    for j = 1:path.points
+    for j = jList
         %% X1 Axis Updates
         set(strip1,'xdata',cats1{i,j}(:,1).*b1m,'zdata',cats1{i,j}(:,2).*b1m)
         set(ends1,'xdata',[cats1{i,j}(1,1) cats1{i,j}(end,1)],...
@@ -76,7 +81,9 @@ for i = 1:path.folds
         x1track = [x1track, x1(i,j)]; %#ok<AGROW>
         y1track = [y1track, 0]; %#ok<AGROW>
         z1track = [z1track, z1(i,j)]; %#ok<AGROW>
-        set(track1,'xdata',x1track,'ydata',y1track,'zdata',z1track)
+        if ~skip
+            set(track1,'xdata',x1track,'ydata',y1track,'zdata',z1track)
+        end
         %% X2 Axis Updates
         set(strip2,'ydata',cats2{i,j}(:,1).*b1m,'zdata',cats2{i,j}(:,2).*b1m)
         set(ends2,'ydata',[cats2{i,j}(1,1) cats2{i,j}(end,1)],...
@@ -84,7 +91,9 @@ for i = 1:path.folds
         x2track = [x2track, 0]; %#ok<AGROW>
         y2track = [y2track, x2(i,j)]; %#ok<AGROW>       
         z2track = [z2track, z2(i,j)]; %#ok<AGROW>
-        set(track2,'xdata',x2track,'ydata',y2track,'zdata',z2track)
+        if ~skip
+            set(track2,'xdata',x2track,'ydata',y2track,'zdata',z2track)
+        end
         %% Figure Refresh
         drawnow
         if makeMovie
