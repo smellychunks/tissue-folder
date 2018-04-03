@@ -1,4 +1,4 @@
-function fullPath(animate2D,animate3D,writeVideo)
+function path = fullPath(animate2D,animate3D,writeVideo)
 %FULLPATH Generates folding paths for tissue folder
 %   Northeastern Capstone Project Spring 2018
 %   This function generates .h files referenced by the arduino control code
@@ -63,9 +63,9 @@ h0_2 = 0; % Height of stack after initial fold
 
 %% Machine Specs
 in.p = 12.7; % Lead Screw Height/Revolution
-in.r1 = 12.7; % X Driving Gear Radius
-in.N1 = 12; % X Driving Gear Teeth
-in.N2 = 16; % X Idling Gear Teeth
+in.r1 = 11.1125; % X Driving Gear Radius (.875" Diameter)
+in.N1 = 28; % X Driving Gear Teeth
+in.N2 = 24; % X Idling Gear Teeth
 in.nstep = 200; % Motor Steps/Revolution
 in.x_rpm_limit = 15; % X Motor Speed Limit (rpm)
 in.z_rpm_limit = 15; % Z Motor Speed Limit (rpm)
@@ -89,9 +89,9 @@ path1 = buildPath(in1);
 path2 = buildPath(in2);
 
 %% Write Controls to .h files for C++
-c = mergePaths(path1,path2); % Combine paths to single structure
-simulate(in,c,true); % Double check slack at control points
-c = buildControls(in,removeWait(c)); % Modify structure for control output
+path = mergePaths(path1,path2); % Combine paths to single structure
+simulate(in,path,true); % Double check slack at control points
+c = buildControls(in,removeWait(path)); % Modify structure for control output
 parentFolder = fileparts(fileparts(mfilename('fullpath')));
 arduinoFolder = 'ArduinoCode';
 headerFolder = fullfile(parentFolder,arduinoFolder);

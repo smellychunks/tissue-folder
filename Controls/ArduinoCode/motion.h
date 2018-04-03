@@ -81,7 +81,7 @@ bool limit( bool car1, bool x, bool fwd){
 
 // Move axis motors to target point
 // (still need to add limit switches)
-bool move(uint16_t xt, uint16_t zt, uint8_t carriage, bool relative) { 
+bool move(int xt, int zt, uint8_t carriage, bool relative) { 
     
     // True until motors have moved (for limit switches)
     bool car1 = carriage == 1;
