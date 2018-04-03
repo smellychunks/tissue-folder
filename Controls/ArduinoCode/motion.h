@@ -283,50 +283,50 @@ void manual()
         switch (inByte) {
             // Carriage 1
             case 's': {
-                Serial.println("Z1 Left");
+                Serial.println("Z1 Down");
                 move(0,-manStep,1,true);
                 delay(dt);
                 break;
             }
             case 'w': {
-                Serial.println("Z1 Right");
+                Serial.println("Z1 Up");
                 move(0,manStep,1,true);
                 delay(dt);
                 break;
             }
             case 'a': {
-                Serial.println("X1 Down");
+                Serial.println("X1 Left");
                 move(-manStep,0,1,true);
                 delay(dt);
                 break;
             }
             case 'd': {
-                Serial.println("X1 Up");
+                Serial.println("X1 Right");
                 move(manStep,0,1,true);
                 delay(dt);
                 break;
             }
             // Carriage 2
             case 'S': {
-                Serial.println("Z2 Left");
+                Serial.println("Z2 Down");
                 move(0,-manStep,2,true);
                 delay(dt);
                 break;
             }
             case 'W': {
-                Serial.println("Z2 Right");
+                Serial.println("Z2 Up");
                 move(0,manStep,2,true);
                 delay(dt);
                 break;
             }
             case 'A': {
-                Serial.println("X2 Down");
+                Serial.println("X2 Left");
                 move(-manStep,0,2,true);
                 delay(dt);
                 break;
             }
             case 'D': {
-                Serial.println("X2 Up");
+                Serial.println("X2 Right");
                 move(manStep,0,2,true);
                 delay(dt);
                 break;
