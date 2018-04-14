@@ -1,12 +1,12 @@
 // MOTOR LIMIT SWITCH PINS
-const int X1L = 2;
-const int X1R = 2;
-const int X2L = 2;
-const int X2R = 2;
-const int Z1B = 2;
-const int Z1T = 2;
-const int Z2B = 2;
-const int Z2T = 2;
+const int X1L = 22;
+const int X1R = 25;
+const int X2L = 26;
+const int X2R = 29;
+const int Z1B = 30;
+const int Z1T = 33;
+const int Z2B = 34;
+const int Z2T = 37;
 
 void initializePins(){
     // MOTOR LIMIT SWITCH PINS
