@@ -91,6 +91,6 @@ void initializeMotors() {
     pump->run(RELEASE);
     
     // Set Arm to Rest Position
-    arm.attach(9);
+    arm.attach(10);
     arm.write(arm_rest);
 }
