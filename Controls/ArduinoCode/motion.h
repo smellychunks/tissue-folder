@@ -131,10 +131,10 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     // Check limit switches before move
     xcheck = limit(car1,true,fwd);
     zcheck = limit(car1,false,up);
-    if (xcheck || zcheck){
+    /*if (xcheck || zcheck){
         Serial.println("Move cancelled due to limit switch!");
         return true;
-    }
+    }*/
     
     // Move while checking limit switches
  
@@ -142,7 +142,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
         
         xcheck = limit(car1,true,fwd);
         zcheck = limit(car1,false,up);
-        if (xcheck || zcheck){
+        /*if (xcheck || zcheck){
             // Home x motor on either limit switch
             if (xcheck) {
                 x->setCurrentPosition(xt);
@@ -158,7 +158,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
                 }
             }
             break;
-        } 
+        } */
     }
 
     return false;
