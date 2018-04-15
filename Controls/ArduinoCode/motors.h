@@ -57,9 +57,11 @@ void backwardstep4() {
 
 // Now we'll wrap the steppers in an AccelStepper object
 AccelStepper x1(forwardstep1, backwardstep1);
-AccelStepper z1(forwardstep2, backwardstep2);
+//AccelStepper z1(forwardstep2, backwardstep2);
+AccelStepper z1(backwardstep2, forwardstep2);
 AccelStepper x2(forwardstep3, backwardstep3);
-AccelStepper z2(forwardstep4, backwardstep4);
+//AccelStepper z2(forwardstep4, backwardstep4);
+AccelStepper z2(backwardstep4, forwardstep4);
 
 // Initialize MultiStepper objects for synchronization
 MultiStepper x1z1;
