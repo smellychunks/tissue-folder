@@ -127,7 +127,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     // Initialize limit switch variables
     bool fwd = x->distanceToGo() >= 0;
     bool up = z->distanceToGo() >= 0;
-    /*
+    
     // Check limit switches before move
     xcheck = limit(car1,true,fwd);
     zcheck = limit(car1,false,up);
@@ -135,11 +135,11 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
         Serial.println("Move cancelled due to limit switch!");
         return true;
     }
-    */
+    
     // Move while checking limit switches
  
     while(xz->run()) {
-        /*
+        
         xcheck = limit(car1,true,fwd);
         zcheck = limit(car1,false,up);
         if (xcheck || zcheck){
@@ -158,26 +158,32 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
                 }
             }
             break;
-        } */
+        } 
     }
 
     return false;
 }
 
 // Runs water pump (pumpTime in milliseconds)
-void squirt(int pumpTime, bool fwd){
-    arm.write(arm_active);
-    if (fwd) pump->run(FORWARD);
+void squirt(int pumpTime, bool fwd){ 
+    if (fwd) {
+        // Move arm down and wait until move is done
+        arm.write(arm_active);
+        while(arm.read()!= arm_active);
+        //pump
+        pump->run(FORWARD);
+    } 
     else pump->run(BACKWARD);
     delay(pumpTime);
     pump->run(RELEASE);
+    // no need to wait-- carriages move slow enough
     arm.write(arm_rest);
 }
 
 // Homes motors on limit switches and moves to starting position
 bool home(){
     // X Axes must be homed manually (to avoid crashes)
-    /*
+    
     int LONG_MAX = 2147483647;
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
@@ -195,7 +201,7 @@ bool home(){
         z2.setCurrentPosition(LONG_MAX);
         move(0,0,2,false);
     }
-    */
+    
     // Move to starting positions
     move(x1z1_start[0],x1z1_start[1],1,false);
     move(x2z2_start[0],x2z2_start[1],2,false);

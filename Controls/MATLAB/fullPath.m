@@ -48,10 +48,10 @@ in.T_pre = .98;
 in.T_post = .98;
 
 % Water Pump Settings
-in.pump_speed = .7; % Run speed of pump (1 = max speed, 0 = stopped)
-in.pump_time = 1; % Run time of pump for single squirt (seconds)
-in.arm_rest = 70; % Resting angle of pump arm (degrees)
-in.arm_active = 110; % Angle of pump when pump is active (degrees)
+in.pump_speed = .6; % Run speed of pump (1 = max speed, 0 = stopped)
+in.pump_time = .12; % Run time of pump for single squirt (seconds)
+in.arm_rest = 85; % Resting angle of pump arm (degrees)
+in.arm_active = 180; % Angle of pump when pump is active (degrees)
 
 % Normal Folds
 in.ds = in.strip_width + 2*in.thk; % Length used for normal folds
