@@ -59,11 +59,11 @@ in.ds = in.strip_width + 2*in.thk; % Length used for normal folds
 in.dh = 2*in.thk; % Height change of normal folds
 
 % Initial Fold of Strip 1
-ds0_1 = in.strip_width + 4; % Strip length used for initial fold
+ds0_1 = in.strip_width + 15; % Strip length used for initial fold
 h0_1 = 0; % Height of stack after initial fold
 
 % Initial Fold of Strip 2
-ds0_2 = in.strip_width + 5; % Strip length used for initial fold
+ds0_2 = in.strip_width + 17; % Strip length used for initial fold
 h0_2 = 0; % Height of stack after initial fold
 
 %% Machine Specs
