@@ -71,7 +71,7 @@ bool limit( bool car1, bool x, bool fwd){
     x: x axis or z axis
     fwd: moving forward or backward
     */
-    int car;
+    int carA, carB;
     if (car1) {
         carA = 1;
         carB = 2;
