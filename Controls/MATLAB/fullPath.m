@@ -32,7 +32,7 @@ in.z_floor = -85.8; % Height of strip holder above baseplate when z bottoms out
 in.z_length = 220; % Length of Z Axis (Only needed for top home)
 
 %% Strip Geometry
-strip_1_length = 160;
+strip_1_length = 155;
 strip_2_length = 160;
 in.strip_width = 10; % Strip Width
 in.thk = .04; % Strip Thickness
