@@ -9,7 +9,7 @@ returns...
 -2 if docked at both ends (error!)
 */
     // Check X Axis Switches
-    Serial.print("Docked() Carriage: ");
+    //Serial.print("Docked() Carriage: ");
     Serial.println(carriage);
     bool A, B, a1, b1, a2, b2;
     if (x){
@@ -35,43 +35,43 @@ returns...
         }
         // carriage 1
         case 1: {
-            Serial.println("Case 1!");
+            //Serial.println("Case 1!");
             A = a1;
             B = b1;
             break;
         }
         // carriage 2
         case 2: {
-            Serial.println("Case 2!");
+            //Serial.println("Case 2!");
             A = a2;
             B = b2;
             break;
         }       
     }
-    
+    /*
     Serial.print("A ");
     Serial.println(A);
     Serial.print("B ");
     Serial.println(B);
-    
+    */
     // undocked
     if (!A && !B) {
-        Serial.println("Undocked!");
+        //Serial.println("Undocked!");
         return 0;
     }
     // left/bottom dock
     if (A && !B) {
-        Serial.println("Left/Bottom Dock!");
+        //Serial.println("Left/Bottom Dock!");
         return -1;
     }
     // right/top dock
     if (!A && B) {
-        Serial.println("Right/Top Dock!");
+        //Serial.println("Right/Top Dock!");
         return 1;
     }
     // docked at both ends (error!)
     else {
-        Serial.println("Opposing limit switches both active!");
+        //Serial.println("Opposing limit switches both active!");
         return -2;
     }
 }
@@ -83,8 +83,8 @@ bool limit( bool car1, bool x, bool fwd){
     x: x axis or z axis
     fwd: moving forward or backward
     */
-    Serial.print("car1: ");
-    Serial.println(car1);
+    //Serial.print("car1: ");
+    //Serial.println(car1);
     int carA, carB;
     if (car1) {
         carA = 1;
@@ -95,15 +95,15 @@ bool limit( bool car1, bool x, bool fwd){
     }
     // <0 if left/bottom switch hit
     // >0 if right/top switch hit
-    Serial.println("checking thisCar dock...");
+    //Serial.println("checking thisCar dock...");
     int thisCar = docked(carA,x);
-    Serial.print("thisCar result ");
+    //Serial.print("thisCar result ");
     Serial.println(thisCar);
     // False if other carriage is docked in X
-    Serial.println("checking otherCar dock...");
+    //Serial.println("checking otherCar dock...");
     bool otherCar = !docked(carB,true);// WAS ! before
-    Serial.print("otherCar result ");
-    Serial.println(otherCar);
+    //Serial.print("otherCar result ");
+    //Serial.println(otherCar);
     //Serial.print("otherCar int value ");
     //Serial.println(!docked(!carB,true));
     // Returns based on forward or reverse motion
@@ -162,17 +162,19 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     bool up = z->distanceToGo() >= 0;
     
     // Check limit switches before move
-    Serial.println("Checking X");
+    //Serial.println("Checking X");
     xcheck = limit(car1,true,fwd);
-    Serial.println("Checking Z");
+    //Serial.println("Checking Z");
     zcheck = limit(car1,false,up);
     if (x->distanceToGo() == 0) xcheck = 0; // ignore if only a z move
     if (xcheck || zcheck){
+        /*
         Serial.println("Move cancelled due to limit switch!");
         Serial.print("xcheck result ");
         Serial.println(xcheck);
         Serial.print("zcheck result ");
         Serial.println(zcheck);
+        */
         return true;
     }
     
