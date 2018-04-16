@@ -37,9 +37,9 @@ zw_limit = pi/30 * in.z_rpm_limit;
 radstep = 2*pi/in.nstep; % radians per step
 
 theta_x = in.N2/(in.N1*in.r1) * x;
-theta_z = z/in.p;
+theta_z = z/in.p; %% in rotations
 step_x = floor(theta_x./radstep);
-step_z = floor(theta_z.*200);
+step_z = floor(theta_z.*in.nstep);
 %%step_z = floor(theta_z./radstep);
 
 %% Transform X so (0,0) is in the center
