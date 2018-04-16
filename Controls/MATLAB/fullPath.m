@@ -50,7 +50,7 @@ in.T_post = .98;
 
 % Water Pump Settings
 in.pump_speed = .6; % Run speed of pump (1 = max speed, 0 = stopped)
-in.pump_time = .12; % Run time of pump for single squirt (seconds)
+in.pump_time = .04; % Run time of pump for single squirt (seconds)
 in.arm_rest = 180; % Resting angle of pump arm (degrees)
 in.arm_active = 85; % Angle of pump when pump is active (degrees)
 
@@ -73,7 +73,7 @@ in.N1 = 28; % X Driving Gear Teeth
 in.N2 = 24; % X Idling Gear Teeth
 in.nstep = 200; % Motor Steps/Revolution
 in.x_rpm_limit = 15; % X Motor Speed Limit (rpm)
-in.z_rpm_limit = 25; % Z Motor Speed Limit (rpm)
+in.z_rpm_limit = 15; % Z Motor Speed Limit (rpm)
 % Z Ceiling Needed for top homing:
 in.z_ceiling = floor( ( (abs(in.z_floor)+in.z_length)/in.p ) / ( 2*pi/in.nstep ) );
 %% **********************USER INPUTS ABOVE*********************************
