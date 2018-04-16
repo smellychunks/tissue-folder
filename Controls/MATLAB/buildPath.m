@@ -39,7 +39,8 @@ radstep = 2*pi/in.nstep; % radians per step
 theta_x = in.N2/(in.N1*in.r1) * x;
 theta_z = z/in.p;
 step_x = floor(theta_x./radstep);
-step_z = floor(theta_z./radstep);
+step_z = floor(theta_z.*200);
+%%step_z = floor(theta_z./radstep);
 
 %% Transform X so (0,0) is in the center
 mid = in.x_length/2;
