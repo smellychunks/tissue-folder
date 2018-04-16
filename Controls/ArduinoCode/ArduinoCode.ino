@@ -58,6 +58,7 @@ void loop() {
             }
             // Fold
             case 'f': {
+                homed = true; //REMOVE THIS
                 if (!homed) {
                     Serial.println("Press 'h' home motors. Don't load strips yet.");
                     break;
