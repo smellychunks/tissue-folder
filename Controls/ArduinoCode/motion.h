@@ -133,6 +133,10 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     zcheck = limit(car1,false,up);
     if (xcheck || zcheck){
         Serial.println("Move cancelled due to limit switch!");
+        Serial.print("xcheck ");
+        Serial.println(xcheck);
+        Serial.print("zcheck ");
+        Serial.println(zcheck);
         return true;
     }
     
