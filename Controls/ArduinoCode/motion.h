@@ -31,18 +31,21 @@ returns...
         case 0: {
             A = a1 && a2;
             B = b1 && b2;
+            break;
         }
         // carriage 1
         case 1: {
             Serial.println("Case 1!");
             A = a1;
             B = b1;
+            break;
         }
         // carriage 2
         case 2: {
             Serial.println("Case 2!");
             A = a2;
             B = b2;
+            break;
         }      
         Serial.print("A ");
         Serial.println(A);
