@@ -19,7 +19,7 @@ returns...
     // Check Z Axis Switches
     else {
         a1 = digitalRead(Z1B);// == HIGH;
-        b1 =  digitalRead(Z1T);// == HIGH;
+        b1 = digitalRead(Z1T);// == HIGH;
         a2 = digitalRead(Z2B);// == HIGH;
         b2 = digitalRead(Z2T);// == HIGH;
     }
@@ -83,11 +83,11 @@ bool limit( bool car1, bool x, bool fwd){
     // >0 if right/top switch hit
     Serial.println("checking thisCar dock...");
     int thisCar = docked(carA,x);
-    Serial.print("thisCar result");
+    Serial.print("thisCar result ");
     Serial.println(thisCar);
     // False if other carriage is docked in X
     Serial.println("checking otherCar dock...");
-    bool otherCar = !docked(carB,true);
+    bool otherCar = docked(carB,true);// WAS ! before
     Serial.print("otherCar result ");
     Serial.println(otherCar);
     //Serial.print("otherCar int value ");
