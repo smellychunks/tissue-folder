@@ -46,12 +46,14 @@ returns...
             A = a2;
             B = b2;
             break;
-        }      
-        Serial.print("A ");
-        Serial.println(A);
-        Serial.print("B ");
-        Serial.println(B); 
+        }       
     }
+    
+    Serial.print("A ");
+    Serial.println(A);
+    Serial.print("B ");
+    Serial.println(B);
+    
     // undocked
     if (!(A && B)) {
         return 0;
