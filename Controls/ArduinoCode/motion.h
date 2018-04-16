@@ -226,6 +226,15 @@ void squirt(int pumpTime, bool fwd){
     delay(pump_wait);// wait on arm
 }
 
+void prime(int pumpTime, bool fwd){
+    if (fwd) {
+        pump->run(FORWARD);
+    }
+    else pump->run(BACKWARD);
+    delay(prime_time);
+    pump->run(RELEASE);
+}
+
 // Homes motors on limit switches and moves to starting position
 bool home(){
     // X Axes must be homed manually (to avoid crashes)
@@ -389,7 +398,7 @@ void manual()
                 delay(dt);
                 break;
             }
-            // Pump
+            // Pump + Servo
             case 'e': {
                 Serial.println("Pump Forward");
                 squirt(manPump,true);
@@ -399,6 +408,19 @@ void manual()
             case 'q': {
                 Serial.println("Pump Reverse");
                 squirt(manPump,false);
+                delay(dt);
+                break;
+            }
+            // Prime Pump
+            case 'E': {
+                Serial.println("Prime Pump Forward");
+                prime(1000,true);
+                delay(dt);
+                break;
+            }
+            case 'Q': {
+                Serial.println("Prime Pump Reverse");
+                prime(1000,false);
                 delay(dt);
                 break;
             }
