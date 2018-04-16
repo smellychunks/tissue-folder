@@ -73,7 +73,7 @@ in.N1 = 28; % X Driving Gear Teeth
 in.N2 = 24; % X Idling Gear Teeth
 in.nstep = 200; % Motor Steps/Revolution
 in.x_rpm_limit = 15; % X Motor Speed Limit (rpm)
-in.z_rpm_limit = 15; % Z Motor Speed Limit (rpm)
+in.z_rpm_limit = 25; % Z Motor Speed Limit (rpm)
 % Z Ceiling Needed for top homing:
 in.z_ceiling = floor( ( (in.z_floor+in.z_length)/in.p ) / ( 2*pi/in.nstep ) );
 %% **********************USER INPUTS ABOVE*********************************
