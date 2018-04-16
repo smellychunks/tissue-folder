@@ -56,14 +56,17 @@ returns...
     
     // undocked
     if (!(A && B)) {
+        Serial.println("Undocked!");
         return 0;
     }
     // left/bottom dock
     if (A && !B) {
+        Serial.println("Left/Bottom Dock!");
         return -1;
     }
     // right/top dock
     if (!A && B) {
+        Serial.println("Right/Top Dock!");
         return 1;
     }
     // docked at both ends (error!)
@@ -98,7 +101,7 @@ bool limit( bool car1, bool x, bool fwd){
     Serial.println(thisCar);
     // False if other carriage is docked in X
     Serial.println("checking otherCar dock...");
-    bool otherCar = docked(carB,true);// WAS ! before
+    bool otherCar = !docked(carB,true);// WAS ! before
     Serial.print("otherCar result ");
     Serial.println(otherCar);
     //Serial.print("otherCar int value ");
