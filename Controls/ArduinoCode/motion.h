@@ -72,7 +72,7 @@ bool limit( bool car1, bool x, bool fwd){
     fwd: moving forward or backward
     */
     Serial.print("car1: ");
-    Serial.println(car);
+    Serial.println(car1);
     int carA, carB;
     if (car1) {
         carA = 1;
