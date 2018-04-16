@@ -220,7 +220,8 @@ void squirt(int pumpTime, bool fwd){
     pump->run(RELEASE);
     // no need to wait-- carriages move slow enough
     arm.write(arm_rest);
-    while(arm.read()!= arm_rest);
+    //while(arm.read()!= arm_rest);
+    delay(800);// wait on arm
 }
 
 // Homes motors on limit switches and moves to starting position
