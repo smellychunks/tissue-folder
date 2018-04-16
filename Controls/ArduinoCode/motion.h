@@ -208,10 +208,12 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
 
 // Runs water pump (pumpTime in milliseconds)
 void squirt(int pumpTime, bool fwd){ 
+    int pump_wait = 1500;
     if (fwd) {
         // Move arm down and wait until move is done
         arm.write(arm_active);
-        while(arm.read()!= arm_active);
+        delay(pump_wait);
+        //while(arm.read()!= arm_active);
         //pump
         pump->run(FORWARD);
     } 
@@ -221,7 +223,7 @@ void squirt(int pumpTime, bool fwd){
     // no need to wait-- carriages move slow enough
     arm.write(arm_rest);
     //while(arm.read()!= arm_rest);
-    delay(800);// wait on arm
+    delay(pump_wait);// wait on arm
 }
 
 // Homes motors on limit switches and moves to starting position
