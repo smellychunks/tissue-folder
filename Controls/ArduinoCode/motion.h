@@ -55,7 +55,7 @@ returns...
     Serial.println(B);
     
     // undocked
-    if (!(A && B)) {
+    if (!A && !B) {
         Serial.println("Undocked!");
         return 0;
     }
