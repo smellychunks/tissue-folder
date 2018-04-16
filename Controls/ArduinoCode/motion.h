@@ -71,6 +71,8 @@ bool limit( bool car1, bool x, bool fwd){
     x: x axis or z axis
     fwd: moving forward or backward
     */
+    Serial.print("car1: ");
+    Serial.println(car);
     int carA, carB;
     if (car1) {
         carA = 1;
@@ -91,7 +93,7 @@ bool limit( bool car1, bool x, bool fwd){
     Serial.print("otherCar result ");
     Serial.println(otherCar);
     Serial.print("otherCar int value ");
-    Serial.println(!docked(!car1,true));
+    Serial.println(!docked(!carB,true));
     // Returns based on forward or reverse motion
     if (fwd) return thisCar>0 || otherCar;
     else return thisCar<0 || otherCar;
