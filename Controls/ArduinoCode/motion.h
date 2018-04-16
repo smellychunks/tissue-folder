@@ -94,8 +94,8 @@ bool limit( bool car1, bool x, bool fwd){
     bool otherCar = !docked(carB,true);// WAS ! before
     Serial.print("otherCar result ");
     Serial.println(otherCar);
-    Serial.print("otherCar int value ");
-    Serial.println(!docked(!carB,true));
+    //Serial.print("otherCar int value ");
+    //Serial.println(!docked(!carB,true));
     // Returns based on forward or reverse motion
     if (fwd) return thisCar>0 || otherCar;
     else return thisCar<0 || otherCar;
