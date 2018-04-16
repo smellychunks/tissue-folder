@@ -40,6 +40,10 @@ returns...
             A = a2;
             B = b2;
         }
+        Serial.print("A ");
+        Serial.println(A);
+        Serial.print("B ");
+        Serial.println(B);
     }
     // undocked
     if (!(A && B)) {
