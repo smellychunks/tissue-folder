@@ -37,7 +37,7 @@ zw_limit = pi/30 * in.z_rpm_limit;
 radstep = 2*pi/in.nstep; % radians per step
 
 theta_x = in.N2/(in.N1*in.r1) * x;
-theta_z = z/in.p; %% in rotations
+theta_z = ( abs(in.z_floor) + z )/in.p; %% in rotations
 step_x = floor(theta_x./radstep);
 step_z = floor(theta_z.*in.nstep);
 %%step_z = floor(theta_z./radstep);
