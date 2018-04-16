@@ -10,7 +10,7 @@ returns...
 */
     // Check X Axis Switches
     //Serial.print("Docked() Carriage: ");
-    Serial.println(carriage);
+    //Serial.println(carriage);
     bool A, B, a1, b1, a2, b2;
     if (x){
         a1 = digitalRead(X1L);// == HIGH;
