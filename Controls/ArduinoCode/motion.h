@@ -9,6 +9,8 @@ returns...
 -2 if docked at both ends (error!)
 */
     // Check X Axis Switches
+    Serial.print("Docked() Carriage: ");
+    Serial.println(carriage);
     bool A, B, a1, b1, a2, b2;
     if (x){
         a1 = digitalRead(X1L);// == HIGH;
