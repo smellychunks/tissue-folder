@@ -74,15 +74,17 @@ bool limit( bool car1, bool x, bool fwd){
     
     // <0 if left/bottom switch hit
     // >0 if right/top switch hit
+    Serial.print("checking thisCar dock...");
     int thisCar = docked(car1,x);
-    Serial.print("thisCar ");
+    Serial.print("thisCar result");
     Serial.println(thisCar);
     // False if other carriage is docked in X
+    Serial.print("checking otherCar dock...");
     bool otherCar = !docked(!car1,true);
-    Serial.print("otherCar ");
+    Serial.print("otherCar result ");
     Serial.println(otherCar);
-    Serial.print("otherCar int value ");
-    Serial.println(!docked(!car1,true));
+    //Serial.print("otherCar int value ");
+    //Serial.println(!docked(!car1,true));
     // Returns based on forward or reverse motion
     if (fwd) return thisCar>0 || otherCar;
     else return thisCar<0 || otherCar;
