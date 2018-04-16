@@ -107,6 +107,7 @@ bool limit( bool car1, bool x, bool fwd){
     //Serial.print("otherCar int value ");
     //Serial.println(!docked(!carB,true));
     // Returns based on forward or reverse motion
+    if (~x) otherCar = false;
     if (fwd) return thisCar>0 || otherCar;
     else return thisCar<0 || otherCar;
 }
@@ -165,6 +166,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     xcheck = limit(car1,true,fwd);
     Serial.println("Checking Z");
     zcheck = limit(car1,false,up);
+    if (x->distanceToGo() == 0) xcheck = 0; // ignore if only a z move
     if (xcheck || zcheck){
         Serial.println("Move cancelled due to limit switch!");
         Serial.print("xcheck result ");
