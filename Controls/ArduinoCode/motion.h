@@ -231,7 +231,7 @@ void prime(int pumpTime, bool fwd){
         pump->run(FORWARD);
     }
     else pump->run(BACKWARD);
-    delay(prime_time);
+    delay(pumpTime);
     pump->run(RELEASE);
 }
 
