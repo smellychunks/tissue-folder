@@ -41,7 +41,7 @@ in.thk = .04; % Strip Thickness
 
 % Control Points
 in.dx_pre = -25;
-in.dx_post = 25;
+in.dx_post = 15;
 
 % Tension Factors (ex: with .98 the strip is 98% taut)
 in.T_dock = .91;
