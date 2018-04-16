@@ -185,7 +185,6 @@ bool home(){
     // X Axes must be homed manually (to avoid crashes)
     
     int LONG_MAX = 2147483647;
-    int z_length = 
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
         x2.setCurrentPosition(0);
