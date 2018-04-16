@@ -27,7 +27,7 @@ end
 
 %% *********************USER INPUTS BELOW*********************************
 %% Basic Machine Geometry
-in.x_length = 180; % Usable width of x axis rails
+in.x_length = 220; % Usable width of x axis rails
 in.z_floor = -85.8; % Height of strip holder above baseplate when z bottoms out
 in.z_length = 220; % Length of Z Axis (Only needed for top home)
 
@@ -44,7 +44,7 @@ in.dx_pre = -25;
 in.dx_post = 25;
 
 % Tension Factors (ex: with .98 the strip is 98% taut)
-in.T_dock = .91;
+in.T_dock = .99;
 in.T_pre = .98;
 in.T_post = .98;
 
