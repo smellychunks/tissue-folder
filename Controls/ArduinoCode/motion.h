@@ -98,7 +98,7 @@ bool limit( bool car1, bool x, bool fwd){
     Serial.println(thisCar);
     // False if other carriage is docked in X
     Serial.println("checking otherCar dock...");
-    bool otherCar = !docked(carB,true);// WAS ! before
+    bool otherCar = docked(carB,true);// WAS ! before
     Serial.print("otherCar result ");
     Serial.println(otherCar);
     //Serial.print("otherCar int value ");
