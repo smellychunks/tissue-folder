@@ -131,10 +131,10 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     // Check limit switches before move
     xcheck = limit(car1,true,fwd);
     zcheck = limit(car1,false,up);
-    /*if (xcheck || zcheck){
+    if (xcheck || zcheck){
         Serial.println("Move cancelled due to limit switch!");
         return true;
-    }*/
+    }
     
     // Move while checking limit switches
  
@@ -142,7 +142,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
         
         xcheck = limit(car1,true,fwd);
         zcheck = limit(car1,false,up);
-        /*if (xcheck || zcheck){
+        if (xcheck || zcheck){
             // Home x motor on either limit switch
             if (xcheck) {
                 x->setCurrentPosition(xt);
@@ -158,7 +158,7 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
                 }
             }
             break;
-        } */
+        } 
     }
 
     return false;
@@ -185,6 +185,7 @@ bool home(){
     // X Axes must be homed manually (to avoid crashes)
     
     int LONG_MAX = 2147483647;
+    int z_length = 
     if ( docked(0,true) == -1 ) {
         x1.setCurrentPosition(0);
         x2.setCurrentPosition(0);
@@ -194,12 +195,18 @@ bool home(){
         return false;
     }
     if ( docked(1,false) > -1 ) {
-        z1.setCurrentPosition(LONG_MAX);
-        move(0,0,1,false);
+        //z1.setCurrentPosition(LONG_MAX);
+        //move(0,0,1,false);
+        z1.setCurrentPosition(0);
+        move(0,LONG_MAX,1,false);
+        z1.setCurrentPosition(z_ceiling);
     }
     if ( docked(2,false) > -1 ) {
-        z2.setCurrentPosition(LONG_MAX);
-        move(0,0,2,false);
+        //z2.setCurrentPosition(LONG_MAX);
+        //move(0,0,2,false);
+        z2.setCurrentPosition(0);
+        move(0,LONG_MAX,2,false);
+        z2.setCurrentPosition(z_ceiling);
     }
     
     // Move to starting positions

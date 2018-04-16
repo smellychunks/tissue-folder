@@ -59,7 +59,8 @@ void backwardstep4() {
 AccelStepper x1(forwardstep1, backwardstep1);
 //AccelStepper z1(forwardstep2, backwardstep2);
 AccelStepper z1(backwardstep2, forwardstep2);
-AccelStepper x2(forwardstep3, backwardstep3);
+//AccelStepper x2(forwardstep3, backwardstep3);
+AccelStepper x2(backwardstep3, forwardstep3);
 //AccelStepper z2(forwardstep4, backwardstep4);
 AccelStepper z2(backwardstep4, forwardstep4);
 
@@ -91,6 +92,6 @@ void initializeMotors() {
     pump->run(RELEASE);
     
     // Set Arm to Rest Position
-    arm.attach(10);
+    arm.attach(9);
     arm.write(arm_rest);
 }
