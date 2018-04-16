@@ -68,7 +68,7 @@ h0_2 = 0; % Height of stack after initial fold
 
 %% Machine Specs
 in.p = 12.7; % Lead Screw Height/Revolution
-in.r1 = 11.1125; % X Driving Gear Radius (.875" Diameter)
+in.r1 = 9.525; % X Driving Gear Radius (.875" Diameter)
 in.N1 = 24; % X Driving Gear Teeth
 in.N2 = 28; % X Idling Gear Teeth
 in.nstep = 200; % Motor Steps/Revolution
