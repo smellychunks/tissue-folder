@@ -34,13 +34,13 @@ returns...
         }
         // carriage 1
         case 1: {
-            System.println("Case 1!");
+            Serial.println("Case 1!");
             A = a1;
             B = b1;
         }
         // carriage 2
         case 2: {
-            System.println("Case 2!");
+            Serial.println("Case 2!");
             A = a2;
             B = b2;
         }      
