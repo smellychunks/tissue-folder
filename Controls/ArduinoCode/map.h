@@ -23,7 +23,7 @@ const uint16_t arm_active = pump_settings[3];
 
 // Data for Z Top Homing
 const uint16_t z_specs[] = {
-    #include "z_ceiling.h"
+    #include "z_specs.h"
 }
 const uint16_t z_ceiling = z_specs[0];
 
