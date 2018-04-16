@@ -11,17 +11,17 @@ returns...
     // Check X Axis Switches
     bool A, B, a1, b1, a2, b2;
     if (x){
-        a1 = digitalRead(X1L) == HIGH;
-        b1 =  digitalRead(X1R) == HIGH;
-        a2 = digitalRead(X2L) == HIGH;
-        b2 = digitalRead(X2R) == HIGH;
+        a1 = digitalRead(X1L);// == HIGH;
+        b1 =  digitalRead(X1R);// == HIGH;
+        a2 = digitalRead(X2L);// == HIGH;
+        b2 = digitalRead(X2R);// == HIGH;
     } 
     // Check Z Axis Switches
     else {
-        a1 = digitalRead(Z1B) == HIGH;
-        b1 =  digitalRead(Z1T) == HIGH;
-        a2 = digitalRead(Z2B) == HIGH;
-        b2 = digitalRead(Z2T) == HIGH;
+        a1 = digitalRead(Z1B);// == HIGH;
+        b1 =  digitalRead(Z1T);// == HIGH;
+        a2 = digitalRead(Z2B);// == HIGH;
+        b2 = digitalRead(Z2T);// == HIGH;
     }
     // Logic for requested carriage
     switch (carriage) {
@@ -134,13 +134,15 @@ bool move(int xt, int zt, uint8_t carriage, bool relative) {
     bool up = z->distanceToGo() >= 0;
     
     // Check limit switches before move
+    Serial.println("Checking X");
     xcheck = limit(car1,true,fwd);
+    Zerial.println("Checking Z");
     zcheck = limit(car1,false,up);
     if (xcheck || zcheck){
         Serial.println("Move cancelled due to limit switch!");
-        Serial.print("xcheck ");
+        Serial.print("xcheck result ");
         Serial.println(xcheck);
-        Serial.print("zcheck ");
+        Serial.print("zcheck result ");
         Serial.println(zcheck);
         return true;
     }
