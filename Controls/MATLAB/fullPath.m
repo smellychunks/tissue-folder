@@ -27,7 +27,7 @@ end
 
 %% *********************USER INPUTS BELOW*********************************
 %% Basic Machine Geometry
-in.x_length = 220; % Usable width of x axis rails
+in.x_length = 260; % Usable width of x axis rails
 in.z_floor = -85.8; % Height of strip holder above baseplate when z bottoms out
 in.z_length = 220; % Length of Z Axis (Only needed for top home)
 
