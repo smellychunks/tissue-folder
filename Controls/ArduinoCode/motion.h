@@ -285,7 +285,7 @@ bool fold(){
     uint16_t z_dock;
     
     // Move motors... for each fold (i), for each carriage (j)
-    for (int i = 0; i<n-1; i++){
+    for (int i = 0; i<n; i++){
         Serial.print("\n----------------------------\n\n");
         for (int j = 1; j<=2; j++){
             

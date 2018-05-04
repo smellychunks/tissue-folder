@@ -12,7 +12,7 @@ axis equal manual
 
 xlim([min(min(x)),max(max(x))])
 ylim([-40,max(max(z1))+20])
-title(sprintf('Axis %d Folding (%dx Speed)',ax,ffwd))
+title(sprintf('Axis %d Folding',ax))
 strip = line(0,0,'LineWidth',2);
 hold on
 ends = scatter(0,0,80,'ko','filled');

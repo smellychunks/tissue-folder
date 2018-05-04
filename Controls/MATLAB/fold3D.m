@@ -38,7 +38,7 @@ grid on
 view(45,15)
 % view(0,0)
 camproj('perspective')
-title('Strip Folding')
+title('Both Axes Folding')
 xlabel('X1 Position (mm)')
 ylabel('X2 Position (mm)')
 zlabel('Z Position (mm)')
